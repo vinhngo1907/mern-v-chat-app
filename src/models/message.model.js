@@ -1,25 +1,19 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const PostSchema = new Schema({
-	title: {
-		type: String,
-		required: true
+const messageSchema = new Schema({
+	conversation: {
+		type: mongoose.Types.ObjectId,
+		ref: 'conversation'
 	},
-	description: {
-		type: String
-	},
-	url: {
-		type: String
-	},
-	status: {
-		type: String,
-		enum: ['TO LEARN', 'LEARNING', 'LEARNED']
-	},
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'users'
-	}
+	sender: { type: mongoose.Types.ObjectId, ref: 'user' },
+	recipent: { type: mongoose.Types.ObjectId, ref: 'user' },
+	media: Array,
+	text: String,
+	call: Object
+
+},{
+	timestamps: true
 })
 
-module.exports = mongoose.model('posts', PostSchema)
+module.exports = mongoose.model('message', messageSchema)

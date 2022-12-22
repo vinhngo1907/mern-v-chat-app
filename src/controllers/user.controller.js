@@ -14,6 +14,9 @@ const userController = {
     getUser: async (req, res) => {
         try {
             const user = await userModel.findOne({ _id: req.params.id }).select("-password -rf_token");
+            if (!user) return res.status(400).json({ msg: "User not found" });
+            
+            res.status(200).json({ msg: "Success", user });
         } catch (error) {
             console.log(error.message);
             return res.status(500).json({ msg: error.message });
@@ -43,7 +46,7 @@ const userController = {
             const { password, oldPassword } = req.body;
             const validPass = await bcrypt.compare(oldPassword, user.password);
             if (!validPass) return res.status(400).json({ msg: "old password not correct" });
-            
+
             const hashedPass = await bcrypt.hash(password, 10);
             await userModel.findOneAndUpdate({ _id: userId }, { password: hashedPass }, { new: true, runValidators: true });
             res.status(200).json({ msg: "Update password successfully" });
