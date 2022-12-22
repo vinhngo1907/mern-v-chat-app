@@ -9,8 +9,8 @@ const UserSchema = new Schema({
         trim: true,
         maxLength: 25
     },
-    fullname:{
-        type:String,
+    fullname: {
+        type: String,
         maxLength: 25,
         required: true,
         trim: true
@@ -32,12 +32,8 @@ const UserSchema = new Schema({
         type: String,
         defulat: 'https://res.cloudinary.com/v-webdev/image/upload/v1661947123/v-chat-app/profile-user_p2khhu.png'
     },
-    followers: {
-        type: [mongoose.Types.ObjectId]
-    },
-    following: {
-        type: [mongoose.Types.ObjectId]
-    },
+    followers: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
+    following: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
     gender: {
         type: String,
         default: 'male'
@@ -50,4 +46,4 @@ const UserSchema = new Schema({
     timestamp: true
 });
 
-module.exports = mongoose.model('users', UserSchema)
+module.exports = mongoose.model('user', UserSchema)
