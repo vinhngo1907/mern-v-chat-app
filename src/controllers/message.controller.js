@@ -40,19 +40,31 @@ const messageController = {
             return res.status(500).json({ msg: error.message });
         }
     },
-    getConversation: async (req, res) => {
+    getMessages: async (req, res) => {
         try {
-            const features = new APIFeautres(conversationModel.find({ recipients: req.user._id }), req.query);
-            const conversations = await features.query.sort('-updated').populate("recipients", "avatar fullname username");
+            const features = new APIFeautres(messageModel.find({
+                $or: [
+                    { sender: req.user._id, recipient: req.params.id },
+                    { sender: req.params.id, recipient: req.user._id }
+                ]
+            }), req.query);
 
-            res.json({ msg: "Success", conversations, result: conversations.length });
+            const messages = await features.query.sort("-createdAt");
+
+            res.json({ msg: "Success", messages, result: messages.length });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ msg: error.message });
         }
     },
-    getMessages: async (req, res) => {
+    deleteMessage: async (req, res) => {
         try {
+            const message = await messageModel.findOneAndDelete({ sender: req.user._id, recipient: req.params.id });
+            if (!message) {
+                res.status(400).json({ msg: "This message not found" });
+            }
+
+            res.json({ msg: "Success", message });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ msg: error.message });
