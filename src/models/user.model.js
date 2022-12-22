@@ -30,7 +30,7 @@ const UserSchema = new Schema({
     },
     avatar: {
         type: String,
-        defulat: 'https://res.cloudinary.com/v-webdev/image/upload/v1661947123/v-chat-app/profile-user_p2khhu.png'
+        default: 'https://res.cloudinary.com/v-webdev/image/upload/v1661947123/v-chat-app/profile-user_p2khhu.png'
     },
     followers: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
     following: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
