@@ -24,7 +24,7 @@ const userController = {
     },
     update: async (req, res) => {
         try {
-            const { fullname, mobile, } = req.body;
+            const { fullname, mobile, avatar} = req.body;
             let updatedUser = {
                 fullname, mobile
             }

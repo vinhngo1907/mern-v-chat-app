@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const verifyToken = require("../middleware/auth");
+const verifyToken = require("../middleware/auth.middleware");
 const conversationCtrl = require("../controllers/conversation.controller");
 
 /**

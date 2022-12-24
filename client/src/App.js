@@ -1,36 +1,36 @@
-import './App.css'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import Landing from './components/layout/Landing'
-import Auth from './views/Auth'
-import AuthContextProvider from './contexts/AuthContext'
-import Dashboard from './views/Dashboard'
-import ProtectedRoute from './components/routing/ProtectedRoute'
-import About from './views/About'
-import PostContextProvider from './contexts/PostContext'
+import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './pages/home';
+import PrivateRouter from "./customRouter/PrivateRouter";
+import PageRender from "./customRouter/PageRender";
+import Login from './pages/login';
+import { useEffect } from 'react';
+
+import Alert from "./components/alert/Alert";
+import { refreshToken } from './redux/actions/authAction';
 
 function App() {
+	const { auth, status, modal } = useSelector(state => state);
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(refreshToken())
+	
+	  },[dispatch])
 	return (
-		<AuthContextProvider>
-			<PostContextProvider>
-				<Router>
+		<Router>
+			<Alert />
+			<input type="checkbox" id="theme" />
+			<div className={`App ${(status || modal) && 'mode'}`}>
+				<div className="main	">
 					<Switch>
-						<Route exact path='/' component={Landing} />
-						<Route
-							exact
-							path='/login'
-							render={props => <Auth {...props} authRoute='login' />}
-						/>
-						<Route
-							exact
-							path='/register'
-							render={props => <Auth {...props} authRoute='register' />}
-						/>
-						<ProtectedRoute exact path='/dashboard' component={Dashboard} />
-						<ProtectedRoute exact path='/about' component={About} />
+						<Route exact path="/" component={auth.token ? Home : Login} />
+						{/* <Route exact path="/register" c />} /> */}
+						<PrivateRouter exact path="/:page" component={PageRender} />
+						<PrivateRouter exact path="/:page/:id" component={PageRender} />
 					</Switch>
-				</Router>
-			</PostContextProvider>
-		</AuthContextProvider>
+				</div>
+			</div>
+		</Router>
 	)
 }
 
