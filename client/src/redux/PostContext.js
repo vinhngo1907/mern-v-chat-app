@@ -1,5 +1,5 @@
 import { createContext, useReducer, useState } from 'react'
-import { postReducer } from '../reducers/postReducer'
+import { postReducer } from './reducers/postReducer'
 import {
 	apiUrl,
 	POSTS_LOADED_FAIL,
@@ -8,7 +8,7 @@ import {
 	DELETE_POST,
 	UPDATE_POST,
 	FIND_POST
-} from './constants'
+} from './store'
 import axios from 'axios'
 
 export const PostContext = createContext()
