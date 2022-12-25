@@ -17,6 +17,7 @@ const authController = {
                 ]
             });
             if (!user) {
+                req.error = { message: 'User not found or not exist' }
                 return res.status(400).json({ msg: 'User not found or not exist' });
             }
             loginUser(user, password, res);
@@ -39,6 +40,7 @@ const authController = {
 
             // check user
             if (user) {
+                req.error = { message: "This username or email is already exist" }
                 return res.status(400).json({ msg: "This username or email is already exist" });
             }
 

@@ -1,21 +1,18 @@
 const rfs = require("rotating-file-stream");
 const path = require("path");
-const morgan = require("morgan");
+// const morgan = require("morgan");
 
 const accessLogStream = rfs.createStream('access.log', {
     interval: '1d', // rotate daily
-    path: path.resolve(__dirname, 'logs/access'),
+    path: path.join('./src/', 'logs/access'),
 });
 
 const errorLogStream = rfs.createStream('error.log', {
     interval: '1d', // rotate daily
-    path: path.resolve(__dirname, 'logs/error'),
+    path: path.join('./src/', 'logs/error'),
 });
 
-morgan.token('error', (req, res) => {
-    console.log(req.error);
-    return `${req.error.message || req.error} - ${req.error.stack}`
-});
+// morgan.token('error', (req, res) => `${req.error.message} - ${req.error.stack}`);
 
 const getCustomErrorMorganFormat = () => JSON.stringify({
     method: ':method',
