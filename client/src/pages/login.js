@@ -13,6 +13,7 @@ const Login = () => {
     }
 
     const [userData, setUserData] = useState(initialState);
+    const [typePass, setTypePass] = useState(false);
     const { account, password } = userData;
     const handleChangeInput = (e) => {
         setUserData({ ...userData, [e.target.name]: e.target.value })
@@ -41,9 +42,13 @@ const Login = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="exampleInputPassword1">Password</label>
-                    <input type="password" className="form-control" id="exampleInputPassword1" name="password"
-                        onChange={handleChangeInput} value={password}
-                    />
+                    <div className="pass">
+                        <input type={typePass ? 'text' : 'password'}
+                            className="form-control" id="exampleInputPassword1" name="password"
+                            onChange={handleChangeInput} value={password}
+                        />
+                        <small onClick={() => setTypePass(!typePass)}>{typePass ? 'hide' : 'show'}</small>
+                    </div>
                 </div>
                 <button type="submit" className="btn btn-dark w-100">Submit</button>
                 <p className="my-2">

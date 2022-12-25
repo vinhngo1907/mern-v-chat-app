@@ -78,15 +78,17 @@ const authController = {
     },
     refreshToken: async (req, res) => {
         try {
-            console.log(req.cookie);
-            const rf_token = req.cookies['rf_v_token'];
+            // console.log(req.cookies);
+            const rf_token = req.cookies.rf_v_token;
             if (!rf_token) {
                 return res.status(401).json('Refresh token not found!');
             }
+
             const decoded = jwt.verify(rf_token, REFRESH_TOKEN_SECRET);
             if (!decoded) {
                 return res.status(401).json('Please login!');
             }
+
             const user = await userModel.findOne({ _id: decoded.userId }).select("-password");
             if (!user) {
                 return res.status(401).json('Authenticated failure, please login again!');

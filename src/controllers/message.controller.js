@@ -1,5 +1,6 @@
 const messageModel = require("../models/message.model");
 const conversationModel = require("../models/conversation.model");
+const userModel = require("../models/user.model");
 
 class APIFeautres {
     constructor(query, queryStr) {
@@ -18,6 +19,10 @@ class APIFeautres {
 const messageController = {
     createMessage: async (req, res) => {
         try {
+            const users = await userModel.find({ _id: req.user._id, following: sender });
+            // if(users.length> 0){
+                
+            // }
             const { sender, recipient, text, call, media } = req.body;
 
             const conversation = await conversationModel.findOneAndUpdate({
