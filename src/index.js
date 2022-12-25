@@ -21,7 +21,7 @@ app.use(cookieParser());
 const isProduction = process.env.NODE_ENV === "production";
 
 // morgan - logger
-morgan.token('error', async (req, res) => await `${req.error.message || req.error} - ${req.error.stack}`);
+morgan.token('error', async (req, res) => `${req.error.message || req.error} - ${req.error.stack}`);
 
 app.use(
     morgan(getCustomErrorMorganFormat(), {

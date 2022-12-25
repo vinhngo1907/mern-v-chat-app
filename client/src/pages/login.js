@@ -33,7 +33,7 @@ const Login = () => {
     return (
         <div className="auth_page">
             <form onSubmit={handleSubmit}>
-                <h3 className="text-uppercase text-center mb-4">V-Chat-App</h3>
+                <h3 className="text-uppercase text-center mb-4">V Chat App</h3>
                 <div className="form-group">
                     <label htmlFor="exampleInputEmail1">Account</label>
                     <input className="form-control" type="text" id="exampleInputEmail1" name="account"
@@ -50,9 +50,9 @@ const Login = () => {
                         <small onClick={() => setTypePass(!typePass)}>{typePass ? 'hide' : 'show'}</small>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-dark w-100">Submit</button>
+                <button type="submit" className="btn btn-dark w-100" disabled={(account && password )? false : true}>Submit</button>
                 <p className="my-2">
-                    Have not an account? <Link to="/" style={{ color: "crimson" }}>Register Now</Link>
+                    Have not an account? <Link to="/register" style={{ color: "crimson" }}>Register Now</Link>
                 </p>
             </form>
         </div>

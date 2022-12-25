@@ -5,10 +5,9 @@ import { logout } from "../../redux/actions/authAction";
 import { GLOBALTYPES } from "../../redux/actions/globalTypes";
 import Avatar from "../Avatar";
 
-const Menu = () => {
+const Menu = ({setOnEdit}) => {
     const { auth, theme } = useSelector(state => state);
     const dispatch = useDispatch();
-
 
     return (
         <div className="menu">
@@ -23,7 +22,10 @@ const Menu = () => {
                         <Link className="dropdown-item" to={`/profile/${auth.user._id}`}>
                             <i className="fas fa-user mr-2" /> Profile
                         </Link>
-
+                        <label htmlFor="edit" className="dropdown-item"
+                            onClick={() => setOnEdit(true)}>
+                            < i className="fas fa-sun light-icon mr-2" /> Edit profile
+                        </label>
                         <label htmlFor="theme" className="dropdown-item"
                             onClick={() => dispatch({
                                 type: GLOBALTYPES.THEME, payload: !theme

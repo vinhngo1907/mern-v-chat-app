@@ -41,6 +41,10 @@ const UserSchema = new Schema({
     mobile: {
         type: String,
         default: ''
+    },
+    address: {
+        type: String,
+        default: ""
     }
 }, {
     timestamp: true
