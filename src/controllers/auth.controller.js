@@ -23,6 +23,7 @@ const authController = {
 
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -53,6 +54,7 @@ const authController = {
 
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -107,6 +109,15 @@ const authController = {
 
         } catch (error) {
             console.log(error);
+            req.error = error;
+            return res.status(500).json({ msg: error.message });
+        }
+    },
+    logout: async (req, res) => {
+        try {
+            res.clearCookie('rf_v_token', { path: '/api/auth/refresh-token' });
+            return res.json({ msg: "Logout success" });
+        } catch (error) {
             req.error = error;
             return res.status(500).json({ msg: error.message });
         }

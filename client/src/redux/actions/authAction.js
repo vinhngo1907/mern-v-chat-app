@@ -18,29 +18,40 @@ export const login = (data) => async (dispatch) => {
 
 export const refreshToken = () => async (dispatch) => {
     const firstLogin = localStorage.getItem("firstLogin")
-    if(firstLogin){
-        dispatch({ type: GLOBALTYPES.ALERT, payload: {loading: true} })
+    if (firstLogin) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } })
 
         try {
             const res = await postDataAPI('auth/refresh-token');
-            dispatch({ 
-                type: GLOBALTYPES.AUTH, 
+            dispatch({
+                type: GLOBALTYPES.AUTH,
                 payload: {
                     token: res.data.access_token,
                     user: res.data.user
-                } 
+                }
             })
 
             dispatch({ type: GLOBALTYPES.ALERT, payload: {} })
 
         } catch (err) {
             console.log(err);
-            dispatch({ 
-                type: GLOBALTYPES.ALERT, 
-                payload: {
-                    error: err.response.data.msg || err
-                } 
-            })
+            // dispatch({
+            //     type: GLOBALTYPES.ALERT,
+            //     payload: {
+            //         error: err.response.data.msg || err
+            //     }
+            // })
         }
+    }
+}
+
+export const logout = () => async (dispatch) => {
+    try {
+        localStorage.removeItem("firstLogin");
+        const res = await postDataAPI('auth/logout');
+        window.location.href = "/";
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
     }
 }

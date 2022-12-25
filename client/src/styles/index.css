@@ -74,6 +74,9 @@ img {
 /* -------- AUTH ---------- */
 @import url("./auth.css");
 
+/* -------- HEADER ---------- */
+@import url("./header.css");
+
 /* -------- AVATAR ---------- */
 @import url("./avatar.css");
 

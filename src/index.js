@@ -28,7 +28,7 @@ app.use(
 );
 
 app.use(
-    isProduction ? morgan('combined', { stream: accessLogStream, }) : morgan("dev")
+    !isProduction ? morgan('combined', { stream: accessLogStream, }) : morgan("dev")
 );
 
 // Routes
