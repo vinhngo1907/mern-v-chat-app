@@ -48,3 +48,22 @@ img {
 
 /* -------- LOADING ---------- */
 @import url("./loading.css");
+
+/* -------- MESSAGE ---------- */
+@import url("./message.css");
+
+/* -------- RESPONSIVE ---------- */
+@media (max-width: 766px) {
+	.message {
+		height: calc(100vh - 100px);
+	}
+
+	.right_mess,
+	.left_mess {
+		display: none;
+	}
+
+	.status {
+		padding: 20px 10px;
+	}
+}
