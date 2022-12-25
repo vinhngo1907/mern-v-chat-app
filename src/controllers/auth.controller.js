@@ -20,7 +20,7 @@ const authController = {
                 req.error = { message: 'User not found or not exist' }
                 return res.status(400).json({ msg: 'User not found or not exist' });
             }
-            loginUser(user, password, res);
+            loginUser(user, password, res, req);
 
         } catch (error) {
             console.log(error);
@@ -126,7 +126,7 @@ const authController = {
     }
 }
 
-async function loginUser(user, password, res) {
+async function loginUser(user, password, res, req) {
     try {
         const isValidPass = await bcrypt.compare(password, user.password);
         if (!isValidPass) {
@@ -135,7 +135,7 @@ async function loginUser(user, password, res) {
                 ? msgError = "Password is incorrect"
                 : msgError = `Password is incorrect. This account login with ${user.type}`;
 
-
+            req.error = { message: msgError }
             return res.status(400).json({ msg: msgError });
         }
 

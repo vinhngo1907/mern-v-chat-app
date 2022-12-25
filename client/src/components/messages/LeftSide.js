@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { GLOBALTYPES } from "../../redux/actions/globalTypes";
 import { getConversations, MESSAGE_TYPES } from "../../redux/actions/messageAction";
 import { getDataAPI } from "../../utils/fetchData";
-import Header from "../header/Header";
+// import Header from "../header/Header";
 import UserCard from "../UserCard";
 
 const LeftSide = () => {
@@ -43,12 +43,12 @@ const LeftSide = () => {
 		setSearch('');
 		setSearch([])
 		dispatch({ type: MESSAGE_TYPES.ADD_USER, payload: { ...user, text: '', media: [] } });
-		return history.push(`/message/${user._id}`)
+		return history.push(`/messages/${user._id}`)
 	}
 
 	return (
 		<>
-			<Header />
+			{/* <Header /> */}
 			<form className="message_header" onSubmit={handleSearch} >
 				<input type="text" value={search}
 					placeholder="Enter to Search..."

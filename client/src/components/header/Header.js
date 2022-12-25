@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
 
-const Header = () => {
+const Header = ({setOnEdit}) => {
     return (
         <div className="header bg-light">
             <nav className="navbar navbar-expand-lg navbar-light bg-light justify-content-between align-middle">
@@ -12,7 +12,7 @@ const Header = () => {
                         V-Chat
                     </h4>
                 </Link>
-                <Menu />
+                <Menu setOnEdit={setOnEdit}/>
             </nav>
         </div>
     )

@@ -9,6 +9,14 @@ const verifyToken = require('../middleware/auth.middleware');
  * @access Public
  */
 router.get('/', verifyToken, userCtrl.getMe);
+
+/**
+ * @route GET api/user/:id
+ * @desc Get user by id
+ * @access Public
+ */
+router.get('/:id', verifyToken, userCtrl.getUser);
+
 /**
  * @route GET api/user/:id
  * @desc Get user by id
@@ -28,13 +36,6 @@ router.patch('/', verifyToken, userCtrl.update);
  * @desc Allow user update new password if user is logged in
  * @access Public
  */
-router.patch('/', verifyToken, userCtrl.changePassword);
-
-/**
- * @route GET api/user/:id
- * @desc Get user by id
- * @access Public
- */
-router.get('/:id', verifyToken, userCtrl.getUser);
+router.patch('/change-password', verifyToken, userCtrl.changePassword);
 
 module.exports = router;

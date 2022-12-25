@@ -1,4 +1,5 @@
 import { postDataAPI } from "../../utils/fetchData";
+import { valid } from "../../utils/valid";
 import { GLOBALTYPES } from "./globalTypes";
 
 export const login = (data) => async (dispatch) => {
@@ -35,12 +36,12 @@ export const refreshToken = () => async (dispatch) => {
 
         } catch (err) {
             console.log(err);
-            // dispatch({
-            //     type: GLOBALTYPES.ALERT,
-            //     payload: {
-            //         error: err.response.data.msg || err
-            //     }
-            // })
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: {
+                    error: err.response.data.msg || err
+                }
+            })
         }
     }
 }
@@ -53,5 +54,33 @@ export const logout = () => async (dispatch) => {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+    }
+}
+
+export const register = (data) => async (dispatch) => {
+    let error = valid(data);
+    if (error.errLength > 0) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: error.errMsg });
+        return
+    }
+
+    try {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+        const res = await postDataAPI('auth/register', data);
+        
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
+        
+        localStorage.setItem("firstLogin", true);
+
+        dispatch({
+            type: GLOBALTYPES.AUTH,
+            payload: {
+                user: res.data.user,
+                token: res.data.access_token
+            }
+        });
+
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: error.response.data.msg || err } })
     }
 }

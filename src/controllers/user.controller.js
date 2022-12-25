@@ -38,12 +38,19 @@ const userController = {
     },
     update: async (req, res) => {
         try {
-            const { fullname, mobile, avatar } = req.body;
-            let updatedUser = {
-                fullname, mobile
+            const { avatar, fullname, mobile, address, gender } = req.body;
+            if (!fullname && !avatar) {
+                req.error = { message: "Please add your full name or avatar." }
+                return res.status(400).json({ msg: "Please add your full name or avatar." });
             }
-            updatedUser = await userModel.findOneAndUpdate({ _id: req.params.id }, updatedUser, { new: true });
+
+            let updatedUser = {
+                avatar, fullname, mobile, address, gender
+            }
+
+            updatedUser = await userModel.findOneAndUpdate({ _id: req.user._id }, updatedUser, { new: true });
             if (!updatedUser) {
+                req.error = { message: "User not found or not authorized" }
                 return res.status(400).json({ msg: "User not found or not authorized" });
             }
             res.status(200).json({ msg: "Updated user successfully" });
@@ -103,7 +110,7 @@ const userController = {
             res.status(200).json({
                 msg: "Success",
                 users,
-                result: users.length, 
+                result: users.length,
                 total: result.length
             })
         } catch (error) {
