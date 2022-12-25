@@ -19,7 +19,8 @@ const userController = {
             const user = req.user;
             res.status(200).json({ msg: "Success", user });
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -30,7 +31,8 @@ const userController = {
 
             res.status(200).json({ msg: "Success", user });
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -46,7 +48,8 @@ const userController = {
             }
             res.status(200).json({ msg: "Updated user successfully" });
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -64,12 +67,13 @@ const userController = {
             res.status(200).json({ msg: "Update password successfully" });
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
     search: async (req, res) => {
         try {
-            // const {account ,fullname} = req.query;
+            console.log(req.query)
             const { username, fullname } = req.query;
             let queryArr = []
 

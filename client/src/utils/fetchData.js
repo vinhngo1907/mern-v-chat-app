@@ -4,7 +4,7 @@ export const getDataAPI = async (url, token) => {
     const res = await axios.get(`/api/${url}`, {
         withCredentials: true,
         headers: {
-            Athorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`
         }
     });
     return res;
