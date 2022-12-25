@@ -12,7 +12,10 @@ const errorLogStream = rfs.createStream('error.log', {
     path: path.resolve(__dirname, 'logs/error'),
 });
 
-morgan.token('error', (req, res) => `${req.error.message || req.error} - ${req.error.stack}`);
+morgan.token('error', (req, res) => {
+    console.log(req.error);
+    return `${req.error.message || req.error} - ${req.error.stack}`
+});
 
 const getCustomErrorMorganFormat = () => JSON.stringify({
     method: ':method',

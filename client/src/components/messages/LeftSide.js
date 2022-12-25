@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { GLOBALTYPES } from "../../redux/actions/globalTypes";
 import { getConversations, MESSAGE_TYPES } from "../../redux/actions/messageAction";
 import { getDataAPI } from "../../utils/fetchData";
+import Header from "../header/Header";
 import UserCard from "../UserCard";
 
 const LeftSide = () => {
@@ -47,6 +48,7 @@ const LeftSide = () => {
 
 	return (
 		<>
+			<Header />
 			<form className="message_header" onSubmit={handleSearch} >
 				<input type="text" value={search}
 					placeholder="Enter to Search..."
