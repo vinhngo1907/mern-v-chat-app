@@ -66,6 +66,7 @@ const authController = {
             registerUser(userData, res);
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -73,6 +74,8 @@ const authController = {
         try {
             const { email } = req.body;
         } catch (error) {
+            console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -104,6 +107,7 @@ const authController = {
 
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     }

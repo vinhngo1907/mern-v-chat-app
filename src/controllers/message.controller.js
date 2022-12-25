@@ -54,6 +54,7 @@ const messageController = {
             res.status(200).json({ msg: "Create success !" });
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -71,6 +72,7 @@ const messageController = {
             res.json({ msg: "Success", messages, result: messages.length });
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -84,6 +86,7 @@ const messageController = {
             res.json({ msg: "Success", message });
         } catch (error) {
             console.log(error);
+            req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     }
