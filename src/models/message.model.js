@@ -7,12 +7,12 @@ const messageSchema = new Schema({
 		ref: 'conversation'
 	},
 	sender: { type: mongoose.Types.ObjectId, ref: 'user' },
-	recipent: { type: mongoose.Types.ObjectId, ref: 'user' },
+	recipient: { type: mongoose.Types.ObjectId, ref: 'user' },
 	media: Array,
 	text: String,
 	call: Object
 
-},{
+}, {
 	timestamps: true
 })
 
