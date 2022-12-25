@@ -19,11 +19,23 @@ class APIFeautres {
 const messageController = {
     createMessage: async (req, res) => {
         try {
-            const users = await userModel.find({ _id: req.user._id, following: sender });
-            // if(users.length> 0){
-                
-            // }
             const { sender, recipient, text, call, media } = req.body;
+            if (!recipient || !text.trim()) {
+                return;
+            }
+
+            const users = await userModel.find({ _id: recipient, followers: sender });
+            if (users.length < 1) {
+                // await userModel
+                //     .findOneAndUpdate({ _id: recipient }, { $push: { followers: sender } }, { new: true })
+                //     .populate("following followers", "-password");
+
+                // await userModel.findOneAndUpdate({ _id: sender }, { $push: { following: recipient } }, { new: true });
+                await Promise.allSettled([
+                    userModel.findOneAndUpdate({ _id: recipient }, { $push: { followers: sender } }, { new: true }),
+                    userModel.findOneAndUpdate({ _id: sender }, { $push: { following: recipient } }, { new: true })
+                ])
+            }
 
             const conversation = await conversationModel.findOneAndUpdate({
                 $or: [{ recipients: [sender, recipient] }, { recipients: [recipient, sender] }]
@@ -64,7 +76,7 @@ const messageController = {
     },
     deleteMessage: async (req, res) => {
         try {
-            const message = await messageModel.findOneAndDelete({ sender: req.user._id, recipient: req.params.id });
+            const message = await messageModel.findOneAndDelete({ _id: req.params.id, sender: req.user._id });
             if (!message) {
                 res.status(400).json({ msg: "This message not found" });
             }

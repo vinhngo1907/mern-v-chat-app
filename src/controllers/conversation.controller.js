@@ -1,5 +1,6 @@
 const conversationModel = require("../models/conversation.model");
 const messageModel = require("../models/message.model");
+const userModel = require("../models/user.model");
 
 class APIFeautres {
     constructor(query, queryStr) {
@@ -30,7 +31,7 @@ const conversationController = {
     },
     deleteConversation: async (req, res) => {
         try {
-            const conversation = await conversationModel.findByIdAndDelete({
+            const conversation = await conversationModel.findOneAndDelete({
                 $or: [
                     { recipients: [req.user._id, req.params.id] },
                     { recipients: [req.params.id, req.user._id] }
