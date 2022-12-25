@@ -6,10 +6,7 @@ const cors = require('cors');
 const helmet = require("helmet");
 const morgan = require("morgan");
 const path = require("path");
-const { accessLogStream, errorLogStream, getCustomErrorMorganFormat } = require("./configs/morgan.config")
-
-// const authRouter = require('./routes/auth')
-// const postRouter = require('./routes/post')
+const { accessLogStream, errorLogStream, getCustomErrorMorganFormat } = require("./configs/morgan.config");
 
 // connect DB
 connectDB();
@@ -36,8 +33,6 @@ app.use(
 
 // Routes
 require("./routes/index.routing")(app);
-// app.use('/api/auth', authRouter)
-// app.use('/api/posts', postRouter)
 
 if (isProduction) {
     app.use(express.static("client/build"));
