@@ -5,6 +5,7 @@ const connectDB = require("./configs/db.config");
 const cors = require('cors');
 const helmet = require("helmet");
 const morgan = require("morgan");
+const rfs = require("rotating-file-stream");
 const path = require("path");
 const { accessLogStream, errorLogStream, getCustomErrorMorganFormat } = require("./configs/morgan.config");
 
@@ -20,6 +21,8 @@ app.use(cookieParser());
 const isProduction = process.env.NODE_ENV === "production";
 
 // morgan - logger
+morgan.token('error', async (req, res) => await `${req.error.message || req.error} - ${req.error.stack}`);
+
 app.use(
     morgan(getCustomErrorMorganFormat(), {
         skip: (req, res) => (res.statusCode < 400),
@@ -30,7 +33,6 @@ app.use(
 app.use(
     !isProduction ? morgan('combined', { stream: accessLogStream, }) : morgan("dev")
 );
-
 // Routes
 require("./routes/index.routing")(app);
 
