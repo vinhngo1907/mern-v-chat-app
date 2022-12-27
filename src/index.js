@@ -21,14 +21,14 @@ app.use(cookieParser());
 const isProduction = process.env.NODE_ENV === "production";
 
 // morgan - logger
-morgan.token('error', async (req, res) => `${req.error.message || req.error} - ${req.error.stack}`);
+morgan.token('error', (req, res) => `${req.error.message || req.error.err} - ${req.error.stack}`);
 
-app.use(
-    morgan(getCustomErrorMorganFormat(), {
-        skip: (req, res) => (res.statusCode < 400),
-        stream: errorLogStream,
-    })
-);
+// app.use(
+//     morgan(getCustomErrorMorganFormat(), {
+//         skip: (req, res) => (res.statusCode < 400),
+//         stream: errorLogStream,
+//     })
+// );
 
 app.use(
     !isProduction ? morgan('combined', { stream: accessLogStream, }) : morgan("dev")

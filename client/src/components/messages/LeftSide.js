@@ -41,7 +41,7 @@ const LeftSide = () => {
 
 	const handleAddUser = (user) => {
 		setSearch('');
-		setSearch([])
+		setSearchUsers([]);
 		dispatch({ type: MESSAGE_TYPES.ADD_USER, payload: { ...user, text: '', media: [] } });
 		return history.push(`/messages/${user._id}`)
 	}

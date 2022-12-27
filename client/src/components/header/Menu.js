@@ -24,7 +24,7 @@ const Menu = ({setOnEdit}) => {
                         </Link>
                         <label htmlFor="edit" className="dropdown-item"
                             onClick={() => setOnEdit(true)}>
-                            < i className="fas fa-sun light-icon mr-2" /> Edit profile
+                            < i className="fas fa-edit mr-2" /> Edit profile
                         </label>
                         <label htmlFor="theme" className="dropdown-item"
                             onClick={() => dispatch({

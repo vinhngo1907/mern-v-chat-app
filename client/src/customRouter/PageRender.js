@@ -10,7 +10,7 @@ const genratePage = (pageName) => {
     try {
         return React.createElement(component());
     } catch (error) {
-        <NotFound />
+        return <NotFound />
     }
 }
 

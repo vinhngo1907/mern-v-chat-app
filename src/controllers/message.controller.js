@@ -69,7 +69,7 @@ const messageController = {
 
             const messages = await features.query.sort("-createdAt");
 
-            res.json({ msg: "Success", messages, result: messages.length });
+            res.json({ messages, result: messages.length });
         } catch (error) {
             console.log(error);
             req.error = error;
