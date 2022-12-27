@@ -9,6 +9,12 @@ const verifyToken = require('../middleware/auth.middleware');
  * @access Public
  */
 router.get('/', verifyToken, userCtrl.getMe);
+/**
+ * @route GET api/user/:id
+ * @desc Get user by id
+ * @access Public
+ */
+router.get('/search', verifyToken, userCtrl.search);
 
 /**
  * @route GET api/user/:id
@@ -16,13 +22,6 @@ router.get('/', verifyToken, userCtrl.getMe);
  * @access Public
  */
 router.get('/:id', verifyToken, userCtrl.getUser);
-
-/**
- * @route GET api/user/:id
- * @desc Get user by id
- * @access Public
- */
-router.get('/search', verifyToken, userCtrl.search);
 
 /**
  * @route PATCH api/user

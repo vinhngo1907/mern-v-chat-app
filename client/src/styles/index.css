@@ -38,13 +38,25 @@
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	
+
 }
 
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
 }
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--main-color);
+	background-color: var(--main-bg-color);
+}
+
 
 #theme {
 	display: none;
@@ -70,7 +82,13 @@ code {
 img {
 	object-fit: cover;
 }
+.user_card{
+	color: var(--main-color);
+}
 
+.user_card:hover{
+	text-decoration: none;
+}
 /* -------- AUTH ---------- */
 @import url("./auth.css");
 
@@ -93,6 +111,10 @@ img {
 @media (max-width: 766px) {
 	.message {
 		height: calc(100vh - 100px);
+	}
+
+	.message .message_back {
+		display: block;
 	}
 
 	.right_mess,

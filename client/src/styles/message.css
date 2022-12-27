@@ -31,13 +31,18 @@
     border-radius: 20px;
     padding: 0 5px;
 }
-.message_header i {
-	position: absolute;
-	top: 50%;
-	right: 20px;
-	transform: translateY(-50%);
-	color: var(--second-color);
-	cursor: pointer;
+
+.message_header .message_tool i {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: var(--second-color);
+    cursor: pointer;
+}
+
+.message_back {
+    display: none;
 }
 
 .message_chat_list {

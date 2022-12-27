@@ -1,23 +1,35 @@
 import { MESSAGE_TYPES } from "../actions/messageAction";
 
 const initialState = {
-    users: [],
+    users: [], // conversations
     resultusers: 0,
-    data: [],
+    data: [], // messages
     firstLoad: false
 }
 
 const messageReducer = (state = initialState, action) => {
     switch (action.type) {
         case MESSAGE_TYPES.ADD_USER:
-            return {
-                ...state,
-                users: [action.payload, ...state.users]
+            if (state.users.every(u => u._id !== action.payload._id)) {
+                return {
+                    ...state,
+                    users: [action.payload, ...state.users]
+                }
             }
+            return state;
 
         case MESSAGE_TYPES.ADD_MESSAGE:
             return {
-                ...state
+                ...state,
+                data: state.data.map((item) => (
+                    item._id === action.payload.recipient || item._id === action.payload.sender
+                        ? {
+                            ...item,
+                            messages: [...item.messages, action.payload],
+                            result: item.result + 1
+                        }
+                        : item
+                ))
             }
 
         case MESSAGE_TYPES.GET_MESSAGES:
