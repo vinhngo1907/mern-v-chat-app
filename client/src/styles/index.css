@@ -68,27 +68,29 @@ body {
 
 .App {
 	width: 100%;
-	min-height: 100vh;
+	/* min-height: 100vh; */
 	background: white;
 }
 
 .main {
 	max-width: 1000px;
 	width: 100%;
-	min-height: 100vh;
+	/* min-height: 100vh; */
 	margin: auto;
 }
 
 img {
 	object-fit: cover;
 }
-.user_card{
+
+.user_card {
 	color: var(--main-color);
 }
 
-.user_card:hover{
+.user_card:hover {
 	text-decoration: none;
 }
+
 /* -------- AUTH ---------- */
 @import url("./auth.css");
 

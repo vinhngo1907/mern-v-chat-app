@@ -88,8 +88,8 @@ const authController = {
             // console.log(req.cookies.rf_v_token);
             const rf_token = req.cookies.rf_v_token;
             if (!rf_token) {
-                req.error = { message: 'Refresh token not found!' }
-                return res.status(401).json({ msg: 'Refresh token not found!' });
+                req.error = { message: 'Please login now!' }
+                return res.status(401).json({ msg: 'Please login now!' });
             }
 
             const decoded = jwt.verify(rf_token, REFRESH_TOKEN_SECRET);
