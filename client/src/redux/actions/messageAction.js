@@ -38,7 +38,6 @@ export const getConversations = ({ page, auth }) => async (dispatch) => {
 export const addMessage = ({ msg, auth }) => async (dispatch) => {
     try {
         const res = await postDataAPI('message', msg, auth.token);
-        console.log({...msg, msg_id: res.data.message._id})
         dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: { ...msg, _id: res.data.message._id } })
         // const { _id, avatar, username } = auth.user;
         // const newMess = { ...msg, user: { _id, avatar, username, fullname } }
@@ -67,6 +66,15 @@ export const deleteMessage = ({ msg, auth, data }) => async (dispatch) => {
     try {
         await deleteDataAPI(`message/${msg._id}`, auth.token);
     } catch (err) {
+        console.log(err);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
+    }
+}
+
+export const deleteConversation = ({id, auth, users}) => async(dispatch)=>{
+    try{
+        
+    }catch(err){
         console.log(err);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
     }
