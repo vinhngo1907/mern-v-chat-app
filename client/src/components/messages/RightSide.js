@@ -136,7 +136,7 @@ const RightSide = () => {
                         ))
                     }
                 </div>
-                <div className={`message_sidebar ${theme ? 'light' : 'dark'} ${showSidebar ? 'show' : ''}`}>
+                <div className={`message_sidebar ${theme ? 'dark' : 'light'} ${showSidebar ? 'show' : ''}`}>
                     {
                         user.length !== 0 &&
                         <div className="chat_user_info text-center py-5">
