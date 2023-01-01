@@ -8,6 +8,8 @@ import { GLOBALTYPES } from "../../redux/actions/globalTypes";
 import { imageUpload } from "../../utils/imageUpload";
 import { imageShow, videoShow } from "../../utils/mediaShow";
 import MsgDisplay from "./MsgDisplay";
+import Avatar from "../Avatar";
+import moment from "moment";
 
 const RightSide = () => {
     const { auth, theme, message } = useSelector(state => state);
@@ -19,6 +21,7 @@ const RightSide = () => {
     const [media, setMedia] = useState([]);
     const { id } = useParams();
     const [data, setData] = useState([]);
+    const [showSidebar, setShowSidebar] = useState(false);
 
     useEffect(() => {
         if (id && message.users.length > 0) {
@@ -105,13 +108,12 @@ const RightSide = () => {
 
                             <i className="fas fa-trash text-danger mr-2" />
 
-                            <i className="fas fa-info-circle text-info mr-2" />
+                            <i className="fas fa-info-circle text-info mr-2"
+                                onClick={() => setShowSidebar(!showSidebar)}
+                            />
                         </div>
                     </UserCard>
                 }
-            </div>
-            <div className="message_sidebar">
-
             </div>
             <div className="chat_container">
                 <div className="chat_display">
@@ -134,7 +136,40 @@ const RightSide = () => {
                         ))
                     }
                 </div>
+                <div className={`message_sidebar ${theme ? 'light' : 'dark'} ${showSidebar ? 'show' : ''}`}>
+                    {
+                        user.length !== 0 &&
+                        <div className="chat_user_info text-center py-5">
+                            <div className="chat_user_img">
+                                <Avatar src={user.avatar} size="super-avatar" />
+                            </div>
+                            <div className="chat_user_content">
+                                <Link to="#" className="chat_user_link">
+                                    <div><i className="fas fa-calendar" /> </div>
+                                    <span>{moment(user.createdAt).fromNow()}</span>
+                                </Link>
+                                <Link to="#" className="chat_user_link">
+                                    <div><i className="fas fa-birthday-cake" /></div>
+                                    <span>{user.birthday ? user.birthday : '12-06-1960'}</span>
+                                </Link>
+                                <Link to="#" className="chat_user_link">
+                                    <div><i className="fas fa-mobile" /></div>
+                                    <span>{`(+84) ${user.mobile}`}</span>
+                                </Link>
+                                <Link to="#" className="chat_user_link">
+                                    <div><i className="fas fa-envelope" /></div>
+                                    <span>{user.email}</span>
+                                </Link>
+                                <Link to="#" className="chat_user_link">
+                                    <div><i className="fas fa-map-marker" /></div>
+                                    <span>{user.address ? user.address : 'No address'}</span>
+                                </Link>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
+
             <div className="show_media" style={{ display: media.length > 0 ? 'grid' : 'none' }}>
                 {
                     media.map((item, index) => (

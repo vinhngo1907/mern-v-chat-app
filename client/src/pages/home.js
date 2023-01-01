@@ -14,8 +14,7 @@ const Home = () => {
                 </div>
 
                 <div className="col-md-8 px-0 right_mess">
-                    <div className="d-flex justify-content-center 
-            align-items-center flex-column h-100">
+                    <div className="d-flex justify-content-center align-items-center flex-column h-100">
 
                         <i className="fab fa-facebook-messenger text-primary"
                             style={{ fontSize: '5rem' }} />
