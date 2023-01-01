@@ -49,13 +49,9 @@ export const getMessages = ({ id, auth, page = 1 }) => async (dispatch) => {
         const res = await getDataAPI(`message/${id}?limit=${page * 9}`, auth.token);
         // console.log(res.data)
         const newData = { ...res.data, messages: res.data.messages.reverse() }
-        console.log(res.data)
+        // console.log(res.data)
         dispatch({ type: MESSAGE_TYPES.GET_MESSAGES, payload: { ...newData, _id: id, page } });
 
-        // const res = await getDataAPI(`message/${id}?limit=${page * 9}`, auth.token)
-        // const newData = {...res.data, messages: res.data.messages.reverse()}
-
-        // dispatch({type: MESSAGE_TYPES.GET_MESSAGES, payload: {...newData, _id: id, page}})
     } catch (err) {
         console.log(err);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })

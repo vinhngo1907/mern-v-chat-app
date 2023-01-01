@@ -7,6 +7,7 @@ import Icons from "../Icons";
 import { GLOBALTYPES } from "../../redux/actions/globalTypes";
 import { imageUpload } from "../../utils/imageUpload";
 import { imageShow, videoShow } from "../../utils/mediaShow";
+import MsgDisplay from "./MsgDisplay";
 
 const RightSide = () => {
     const { auth, theme, message } = useSelector(state => state);
@@ -32,9 +33,7 @@ const RightSide = () => {
 
     useEffect(() => {
         const newData = message.data.find(item => item._id === id)
-        if(newData){
-            setData(newData.messages);
-        }
+        if (newData) setData(newData.messages);
 
     }, [id, message.data]);
 
@@ -94,25 +93,47 @@ const RightSide = () => {
     }
     return (
         <>
-            <div className="message_header" style={{ cursor: "pointer" }}>
-                <div className="message_back"><Link to="/"><i className="fas fa-arrow-left" /></Link></div>
+            <div className="message_header p-3" style={{ cursor: "pointer" }}>
+                <div className="message_back"><Link to="/"><i className="fas fa-arrow-left text-dark" /></Link></div>
                 {
                     user.length !== 0 &&
                     <UserCard user={user}>
                         <div className="message_tool">
-                            <i className="fas fa-phone-alt mx-4" />
+                            <i className="fas fa-phone-alt text-primary mr-2" />
 
-                            <i className="fas fa-video mx-5" />
+                            <i className="fas fa-video text-success mr-2" />
 
-                            <i className="fas fa-trash text-danger mx-6" />
+                            <i className="fas fa-trash text-danger mr-2" />
 
-                            <i className="fas fa-info-alt" />
+                            <i className="fas fa-info-circle text-info mr-2" />
                         </div>
                     </UserCard>
                 }
             </div>
+            <div className="message_sidebar">
+
+            </div>
             <div className="chat_container">
-                <div className="chat_display"></div>
+                <div className="chat_display">
+                    {
+                        data.map((item, index) => (
+                            <div key={index}>
+                                {
+                                    item.recipient === auth.user._id &&
+                                    <div className="chat_row other_message">
+                                        <MsgDisplay user={user} theme={theme} msg={item} />
+                                    </div>
+                                }
+                                {
+                                    item.sender === auth.user._id &&
+                                    <div className="chat_row you_message">
+                                        <MsgDisplay user={auth.user} theme={theme} msg={item} data={data} />
+                                    </div>
+                                }
+                            </div>
+                        ))
+                    }
+                </div>
             </div>
             <div className="show_media" style={{ display: media.length > 0 ? 'grid' : 'none' }}>
                 {
