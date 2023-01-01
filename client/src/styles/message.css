@@ -180,6 +180,8 @@
 
 /* -------- Chat Container ----- */
 .chat_container {
+    display: flex;
+    position: relative;
     width: 100%;
     height: calc(100% - 110px);
     overflow-y: auto;
@@ -194,6 +196,59 @@
     flex-direction: column;
     justify-content: flex-end;
 }
+
+/* -------- message sidebar----- */
+.message_sidebar {
+    /* width: 0; */
+    opacity: 0;
+    min-height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px 1px;
+    background: var(--main-bg-color);
+    color: var(--main-color);
+    overflow: hidden;
+    /* transform: translateX(120%); */
+    border-radius: 0 3px 3px 1px; 
+    z-index: 9;
+    transition: opacity .3s ease, transform .3s;
+}
+
+.message_sidebar.show {
+    opacity: 1;
+    /* width: 350px; */
+    /* transform: translateX(0); */
+}
+.chat_user_link {
+    display: flex;
+    align-items: center;
+    color: var(--main-color);
+    text-decoration: none;
+}
+.chat_user_link i {
+    font-size: 1.5rem;
+    color: var(--second-color);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.chat_user_link div {
+    min-width: 62px;
+    height: 62px;
+    position: relative;
+    overflow-y: auto;
+}
+
+.chat_user_link:hover {
+    background: var(--second-bg-color);
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--second-color);
+}
+
+/*======== Chat row ==========*/
 
 .chat_row {
     display: flex;
@@ -289,56 +344,4 @@
 
 .chat_input .dropdown-menu {
     transform: translate3d(-110px, -200px, 0px) !important;
-}
-
-/* -------- message sidebar----- */
-.message_sidebar {
-    width: 350px;
-    opacity: 0;
-    /* height: calc(100% - 110px); */
-    position: fixed;
-    top: 60px;
-    background: var(--main-bg-color);
-    color: var(--main-color);
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px 1px;
-    overflow: hidden;
-    z-index: 100;
-    transform: translateX(190%);
-    transition: opacity .3s ease, transform .3s;
-    border-radius: 0 3px 3px 1px;
-}
-
-.message_sidebar.show {
-    opacity: 1;
-    transform: translateX(90%);
-}
-
-.chat_user_link {
-    display: flex;
-    align-items: center;
-    color: var(--main-color);
-    text-decoration: none;
-}
-
-.chat_user_link i {
-    font-size: 1.5rem;
-    color: var(--second-color);
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.chat_user_link div {
-    min-width: 62px;
-    height: 62px;
-    position: relative;
-    overflow-y: auto;
-}
-
-.chat_user_link:hover {
-    background: var(--second-bg-color);
-    text-decoration: none;
-    cursor: pointer;
-    color: var(--second-color);
 }
