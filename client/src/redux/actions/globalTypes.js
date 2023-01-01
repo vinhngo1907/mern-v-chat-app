@@ -8,7 +8,7 @@ export const GLOBALTYPES = {
 }
 
 export const editData = (data, post, id) =>{
-    const newData = data.find(item=>item._id === id ? post : item);
+    const newData = data.map(item=>item._id === id ? post : item);
     return newData;
 }
 

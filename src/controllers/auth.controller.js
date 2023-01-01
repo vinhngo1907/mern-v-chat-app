@@ -65,6 +65,7 @@ const authController = {
             const { active_token } = req.body;
             const userData = jwt.verify(active_token, ACTIVE_TOKEN_SECRET);
             if (!userData) {
+                req.error = { message: "Authenticated faild, please try again." }
                 return res.status(400).json({ msg: "Authenticated faild, please try again." })
             }
             registerUser(userData, res);

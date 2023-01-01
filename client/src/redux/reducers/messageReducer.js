@@ -29,7 +29,17 @@ const messageReducer = (state = initialState, action) => {
                             result: item.result + 1
                         }
                         : item
-                ))
+                )),
+                users: state.users.map(user =>
+                    user._id === action.payload.recipient || user._id === action.payload.sender
+                        ? {
+                            ...user,
+                            text: action.payload.text,
+                            media: action.payload.media,
+                            call: action.payload.call
+                        }
+                        : user
+                )
             }
 
         case MESSAGE_TYPES.GET_MESSAGES:
@@ -45,7 +55,15 @@ const messageReducer = (state = initialState, action) => {
                 resultusers: action.payload.result,
                 firstLoad: true
             }
-
+        case MESSAGE_TYPES.DELETE_MESSAGE:
+            const newData = state.data.map(item =>
+                item._id === action.payload._id
+                    ? { ...item, messages: action.payload.newData }
+                    : item);
+            return {
+                ...state,
+                data: newData
+            }
         default:
             return state;
     }
