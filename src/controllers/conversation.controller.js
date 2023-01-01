@@ -21,7 +21,7 @@ const conversationController = {
     getConversation: async (req, res) => {
         try {
             const features = new APIFeautres(conversationModel.find({ recipients: req.user._id }), req.query);
-            const conversations = await features.query.sort('-updatedAt').populate("recipients", "avatar fullname username");
+            const conversations = await features.query.sort('-updatedAt').populate("recipients", "avatar fullname username email mobile address createdAt");
 
             res.json({ msg: "Success", conversations, result: conversations.length });
         } catch (error) {
