@@ -51,7 +51,7 @@ const messageController = {
 
             await newMess.save();
 
-            res.status(200).json({ msg: "Create success !" });
+            res.status(200).json({ msg: "Create success !", message: newMess });
         } catch (error) {
             console.log(error);
             req.error = error;
@@ -78,12 +78,13 @@ const messageController = {
     },
     deleteMessage: async (req, res) => {
         try {
-            const message = await messageModel.findOneAndDelete({ _id: req.params.id, sender: req.user._id });
-            if (!message) {
+            const deletedMessage = await messageModel.findOneAndDelete({ _id: req.params.id, sender: req.user._id });
+            if (!deletedMessage) {
+                req.error = { message: "This message not found" }
                 res.status(400).json({ msg: "This message not found" });
             }
 
-            res.json({ msg: "Success", message });
+            res.json({ msg: "Success", message: deletedMessage });
         } catch (error) {
             console.log(error);
             req.error = error;

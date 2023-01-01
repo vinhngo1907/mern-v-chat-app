@@ -102,13 +102,13 @@ const RightSide = () => {
                     user.length !== 0 &&
                     <UserCard user={user}>
                         <div className="message_tool">
-                            <i className="fas fa-phone-alt text-primary mr-2" />
+                            <i className="fas fa-phone-alt text-primary mr-3" />
 
-                            <i className="fas fa-video text-success mr-2" />
+                            <i className="fas fa-video text-success mr-3" />
 
-                            <i className="fas fa-trash text-danger mr-2" />
+                            <i className="fas fa-trash text-danger mr-3" />
 
-                            <i className="fas fa-info-circle text-info mr-2"
+                            <i className="fas fa-info-circle text-info"
                                 onClick={() => setShowSidebar(!showSidebar)}
                             />
                         </div>

@@ -1,12 +1,14 @@
-import { GLOBALTYPES } from "./globalTypes";
-import { getDataAPI, postDataAPI } from "../../utils/fetchData";
+import { deleteData, GLOBALTYPES } from "./globalTypes";
+import { deleteDataAPI, getDataAPI, postDataAPI } from "../../utils/fetchData";
 
 export const MESSAGE_TYPES = {
     ADD_USER: "ADD_USER",
     ADD_MESSAGE: "ADD_MESSAGE",
     GET_CONVERSATIONS: 'GET_CONVERSATIONS',
     GET_MESSAGES: 'GET_MESSAGES',
-    CHECK_ONLINE_OFFLINE: "CHECK_ONLINE_OFFLINE"
+    CHECK_ONLINE_OFFLINE: "CHECK_ONLINE_OFFLINE",
+    DELETE_MESSAGE: "DELETE_MESSAGE",
+    DELETE_USER: "DELETE_USER",
 }
 
 export const getConversations = ({ page, auth }) => async (dispatch) => {
@@ -35,10 +37,11 @@ export const getConversations = ({ page, auth }) => async (dispatch) => {
 
 export const addMessage = ({ msg, auth }) => async (dispatch) => {
     try {
-        dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: { ...msg } })
+        const res = await postDataAPI('message', msg, auth.token);
+        console.log({...msg, msg_id: res.data.message._id})
+        dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: { ...msg, _id: res.data.message._id } })
         // const { _id, avatar, username } = auth.user;
         // const newMess = { ...msg, user: { _id, avatar, username, fullname } }
-        await postDataAPI('message', msg, auth.token);
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
     }
@@ -55,5 +58,16 @@ export const getMessages = ({ id, auth, page = 1 }) => async (dispatch) => {
     } catch (err) {
         console.log(err);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
+    }
+}
+
+export const deleteMessage = ({ msg, auth, data }) => async (dispatch) => {
+    const newData = deleteData(data, msg._id);
+    dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: { newData, _id: msg.recipient } });
+    try {
+        await deleteDataAPI(`message/${msg._id}`, auth.token);
+    } catch (err) {
+        console.log(err);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
     }
 }

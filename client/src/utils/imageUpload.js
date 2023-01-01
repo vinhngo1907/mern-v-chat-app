@@ -24,14 +24,14 @@ export const imageUpload = async (images) => {
             formData.append("file", item);
         }
 
-        formData.append("upload_preset", "vsosr4ei")
-        formData.append("cloud_name", "v-webdev")
-        const res = await fetch("https://api.cloudinary.com/v1_1/v-webdev/upload", {
+        formData.append("upload_preset", "")
+        formData.append("cloud_name", "")
+        const res = await fetch("https://api.cloudinary.com/v1", {
             method: "POST",
             body: formData
         });
         const data = await res.json()
-        console.log(data);
+        // console.log(data);
         imgArr.push({ public_id: data.public_id, url: data.secure_url });
     }
     return imgArr;

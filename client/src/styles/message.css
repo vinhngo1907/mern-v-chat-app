@@ -199,8 +199,10 @@
 
 /* -------- message sidebar----- */
 .message_sidebar {
-    /* width: 0; */
+    width: 60%;
     opacity: 0;
+    display: none;
+    /* height: calc(100% - 0px); */
     min-height: 100%;
     position: absolute;
     top: 0;
@@ -208,17 +210,18 @@
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px 1px;
     background: var(--main-bg-color);
     color: var(--main-color);
+    /* overflow-y: auto; */
     overflow: hidden;
-    /* transform: translateX(120%); */
     border-radius: 0 3px 3px 1px; 
     z-index: 9;
-    transition: opacity .3s ease, transform .3s;
+    transform: translateX(120%);
+    transition: opacity .3s ease-in, transform .3s;
 }
 
 .message_sidebar.show {
     opacity: 1;
-    /* width: 350px; */
-    /* transform: translateX(0); */
+    display: block;
+    transform: translateX(0);
 }
 .chat_user_link {
     display: flex;
@@ -264,7 +267,7 @@
 }
 
 .you_message {
-    justify-content: end;
+    /* justify-content: end; */
     justify-items: end;
     display: flex;
     flex-direction: row-reverse;
