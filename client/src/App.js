@@ -10,6 +10,9 @@ import { useEffect } from 'react';
 
 import Alert from "./components/alert/Alert";
 import { refreshToken } from './redux/actions/authAction';
+import io from 'socket.io-client'
+import SocketClient from "./SocketClient";
+import { GLOBALTYPES } from "./redux/actions/globalTypes";
 
 function App() {
 	const { auth, status, modal } = useSelector(state => state);
@@ -17,6 +20,9 @@ function App() {
 
 	useEffect(() => {
 		dispatch(refreshToken())
+		const socket = io();
+		dispatch({ type: GLOBALTYPES.SOCKET, payload: socket });
+		return () => socket.close()
 
 	}, [dispatch]);
 
@@ -26,6 +32,7 @@ function App() {
 			<input type="checkbox" id="theme" />
 			<div className={`App ${(status || modal) && 'mode'}`}>
 				<div className="main">
+					{auth.token && <SocketClient />}
 					<Switch>
 						<Route exact path="/" component={auth.token ? Home : Login} />
 						<Route exact path="/register" component={Register} />

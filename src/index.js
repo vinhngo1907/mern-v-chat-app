@@ -8,6 +8,8 @@ const morgan = require("morgan");
 const rfs = require("rotating-file-stream");
 const path = require("path");
 const { accessLogStream, errorLogStream, getCustomErrorMorganFormat } = require("./configs/morgan.config");
+const { defaultSocket } = require("./socket-routers/index.routing");
+const { deviceSocket, userSocket } = require("./socket-routers/user-socket.routing");
 
 // connect DB
 connectDB();
@@ -23,18 +25,31 @@ const isProduction = process.env.NODE_ENV === "production";
 // morgan - logger
 morgan.token('error', (req, res) => `${req.error.message || req.error.err} - ${req.error.stack}`);
 
-// app.use(
-//     morgan(getCustomErrorMorganFormat(), {
-//         skip: (req, res) => (res.statusCode < 400),
-//         stream: errorLogStream,
-//     })
-// );
+app.use(
+    morgan(getCustomErrorMorganFormat(), {
+        skip: (req, res) => (res.statusCode < 400),
+        stream: errorLogStream,
+    })
+);
 
 app.use(
     !isProduction ? morgan('combined', { stream: accessLogStream, }) : morgan("dev")
 );
 // Routes
 require("./routes/index.routing")(app);
+
+// socket
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+const onConnection = async (socket) => {
+    let users = [];
+    console.log("new connection");
+    userSocket(io, socket, users);
+    defaultSocket(io, socket, users);
+}
+
+io.on("connection", onConnection);
+
 
 if (isProduction) {
     app.use(express.static("client/build"));
@@ -45,4 +60,4 @@ if (isProduction) {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+http.listen(PORT, () => console.log(`Server started on port ${PORT}`));

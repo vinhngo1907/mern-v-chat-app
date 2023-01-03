@@ -5,6 +5,7 @@ import modal from "./modalReducer";
 import alert from "./alertReducer";
 import message from "./messageReducer";
 import theme from "./themeReducer";
+import socket from "./socketReducer";
 
 export default combineReducers({
     auth,
@@ -12,5 +13,6 @@ export default combineReducers({
     status,
     modal,
     message,
-    theme
+    theme,
+    socket
 })
