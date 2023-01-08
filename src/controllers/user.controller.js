@@ -118,6 +118,24 @@ const userController = {
             req.error = error;
             return res.status(500).json({ msg: error.message });
         }
+    },
+    resetPassword: async (req, res) => {
+        try {
+            if (!req.user) {
+                req.error = { message: "Please login right now!" }
+                return res.status(400).json({ msg: "Please login right now!" });
+            }
+            const password = await bcrypt.hash(req.body.password, 10);
+            const user = await userModel.findOneAndUpdate({ _id: req.user._id }, {
+                password: password
+            }, { new: true });
+
+            res.status(200).json({ msg: "Reset password success" })
+        } catch (error) {
+            console.log(error);
+            req.error = error;
+            return res.status(500).json({ msg: error.message });
+        }
     }
 }
 
