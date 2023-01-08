@@ -35,12 +35,13 @@ export const getConversations = ({ page, auth }) => async (dispatch) => {
     }
 }
 
-export const addMessage = ({ msg, auth }) => async (dispatch) => {
+export const addMessage = ({ msg, auth, socket }) => async (dispatch) => {
+    const { _id, avatar, username, fullname } = auth.user;
+    const newMess = { ...msg, user: { _id, avatar, username, fullname } }
+    socket.emit('addMessage', { ...newMess });
     try {
         const res = await postDataAPI('message', msg, auth.token);
-        dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: { ...msg, _id: res.data.message._id } })
-        // const { _id, avatar, username } = auth.user;
-        // const newMess = { ...msg, user: { _id, avatar, username, fullname } }
+        dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: { ...msg, _id: res.data.message._id } });
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
     }
@@ -71,10 +72,10 @@ export const deleteMessage = ({ msg, auth, data }) => async (dispatch) => {
     }
 }
 
-export const deleteConversation = ({id, auth, users}) => async(dispatch)=>{
-    try{
-        
-    }catch(err){
+export const deleteConversation = ({ id, auth, users }) => async (dispatch) => {
+    try {
+
+    } catch (err) {
         console.log(err);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
     }
