@@ -67,8 +67,11 @@ const userController = {
 
             const { password, oldPassword } = req.body;
             const validPass = await bcrypt.compare(oldPassword, user.password);
-            if (!validPass) return res.status(400).json({ msg: "old password not correct" });
+            if (!validPass) {
+                req.error = {message: "Old password not correct"}
+                return res.status(400).json({ msg: "Old password not correct" });
 
+            }
             const hashedPass = await bcrypt.hash(password, 10);
             await userModel.findOneAndUpdate({ _id: userId }, { password: hashedPass }, { new: true, runValidators: true });
             res.status(200).json({ msg: "Update password successfully" });
@@ -80,7 +83,6 @@ const userController = {
     },
     search: async (req, res) => {
         try {
-            console.log(req.query)
             const { username, fullname } = req.query;
             let queryArr = []
 

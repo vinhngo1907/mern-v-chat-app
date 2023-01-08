@@ -50,10 +50,18 @@ const Login = () => {
                         <small onClick={() => setTypePass(!typePass)}>{typePass ? 'hide' : 'show'}</small>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-dark w-100" disabled={(account && password )? false : true}>Submit</button>
+                <button type="submit" className="btn btn-dark w-100" disabled={(account && password) ? false : true}>Submit</button>
+                <small className="row my-2 text-primary" style={{ cursor: 'pointer' }}>
+                    <span className="col-6">
+                        <Link to='/forgot_password'>
+                            Forgot password?
+                        </Link>
+                    </span>
+                </small>
                 <p className="my-2">
                     Have not an account? <Link to="/register" style={{ color: "crimson" }}>Register Now</Link>
                 </p>
+
             </form>
         </div>
     )
