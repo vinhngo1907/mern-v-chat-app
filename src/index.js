@@ -9,7 +9,8 @@ const rfs = require("rotating-file-stream");
 const path = require("path");
 const { accessLogStream, errorLogStream, getCustomErrorMorganFormat } = require("./configs/morgan.config");
 const { defaultSocket } = require("./socket-routers/index.routing");
-const { deviceSocket, userSocket } = require("./socket-routers/user-socket.routing");
+const { userSocket } = require("./socket-routers/user-socket.routing");
+const { messageSocket } = require("./socket-routers/message-socket.routing");
 
 // connect DB
 connectDB();
@@ -39,12 +40,14 @@ app.use(
 require("./routes/index.routing")(app);
 
 // socket
+let users = [];
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const onConnection = async (socket) => {
-    let users = [];
+    
     console.log("new connection");
     userSocket(io, socket, users);
+    messageSocket(io, socket, users);
     defaultSocket(io, socket, users);
 }
 

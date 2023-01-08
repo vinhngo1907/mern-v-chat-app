@@ -12,7 +12,7 @@ import Avatar from "../Avatar";
 import moment from "moment";
 
 const RightSide = () => {
-    const { auth, theme, message } = useSelector(state => state);
+    const { auth, theme, message, socket } = useSelector(state => state);
     const dispatch = useDispatch();
 
     const [user, setUser] = useState([]);
@@ -23,6 +23,7 @@ const RightSide = () => {
     const [data, setData] = useState([]);
     const [showSidebar, setShowSidebar] = useState(false);
 
+    // const refDisplay = useRef()
     useEffect(() => {
         if (id && message.users.length > 0) {
             // setTimeout(() => {
@@ -87,7 +88,7 @@ const RightSide = () => {
         setMedia([]);
         setText("");
 
-        dispatch(addMessage({ msg, auth }));
+        dispatch(addMessage({ msg, auth, socket }));
     }
     const handleDeleteMedia = (index) => {
         const newArr = [...media];
@@ -149,8 +150,8 @@ const RightSide = () => {
                                     <span>{moment(user.createdAt).fromNow()}</span>
                                 </Link>
                                 <Link to="#" className="chat_user_link">
-                                    <div><i className="fas fa-birthday-cake" /></div>
-                                    <span>{user.birthday ? user.birthday : '12-06-1960'}</span>
+                                    <div><i className="fas fa-venus-mars" /></div>
+                                    <span>{user.birthday ? user.gender : 'Other'}</span>
                                 </Link>
                                 <Link to="#" className="chat_user_link">
                                     <div><i className="fas fa-mobile" /></div>
