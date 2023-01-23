@@ -1,3 +1,4 @@
+import { deleteData } from "../actions/globalTypes";
 import { MESSAGE_TYPES } from "../actions/messageAction";
 
 const initialState = {
@@ -64,6 +65,14 @@ const messageReducer = (state = initialState, action) => {
                 ...state,
                 data: newData
             }
+        case MESSAGE_TYPES.DELETE_CV:
+            const newMesssages = deleteData(state.data, action.payload._id);
+            return {
+                ...state,
+                users: action.payload.newCV,
+                data: newMesssages
+            };
+        
         default:
             return state;
     }

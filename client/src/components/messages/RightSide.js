@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
-import { addMessage, getMessages } from "../../redux/actions/messageAction";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { addMessage, deleteConversation, getMessages } from "../../redux/actions/messageAction";
 import UserCard from "../UserCard";
 import Icons from "../Icons";
 import { GLOBALTYPES } from "../../redux/actions/globalTypes";
@@ -14,7 +14,7 @@ import moment from "moment";
 const RightSide = () => {
     const { auth, theme, message, socket } = useSelector(state => state);
     const dispatch = useDispatch();
-
+    const history = useHistory();
     const [user, setUser] = useState([]);
     const [text, setText] = useState("");
 
@@ -23,7 +23,7 @@ const RightSide = () => {
     const [data, setData] = useState([]);
     const [showSidebar, setShowSidebar] = useState(false);
 
-    // const refDisplay = useRef()
+    const refDisplay = useRef();
     useEffect(() => {
         if (id && message.users.length > 0) {
             // setTimeout(() => {
@@ -46,9 +46,9 @@ const RightSide = () => {
         const getMessagesData = async () => {
             if (message.data.every(item => item._id !== id)) {
                 await dispatch(getMessages({ id, auth }))
-                // setTimeout(() => {
-                //     refDisplay.current.scrollIntoView({behavior: 'smooth', block: 'end'})
-                // },50)
+                setTimeout(() => {
+                    refDisplay.current.scrollIntoView({behavior: 'smooth', block: 'end'})
+                },50)
             }
         }
         getMessagesData()
@@ -95,6 +95,15 @@ const RightSide = () => {
         newArr.splice(index, 1);
         setMedia(newArr);
     }
+
+    const handleDeleteCV = () => {
+        if (window.confirm("Are your sure to continue delete this conversation?")) {
+            const users = message.users;
+            dispatch(deleteConversation({ id, auth, users }));
+            return history.push("/");
+        }
+    }
+
     return (
         <>
             <div className="message_header p-3" style={{ cursor: "pointer" }}>
@@ -107,7 +116,9 @@ const RightSide = () => {
 
                             <i className="fas fa-video text-success mr-3" />
 
-                            <i className="fas fa-trash text-danger mr-3" />
+                            <i className="fas fa-trash text-danger mr-3" 
+                                onClick={handleDeleteCV}
+                            />
 
                             <i className="fas fa-info-circle text-info"
                                 onClick={() => setShowSidebar(!showSidebar)}
@@ -117,7 +128,7 @@ const RightSide = () => {
                 }
             </div>
             <div className="chat_container">
-                <div className="chat_display">
+                <div className="chat_display"  ref={refDisplay}>
                     {
                         data.map((item, index) => (
                             <div key={index}>
