@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { forgotPassword } from "../redux/actions/authAction";
 
 const ForgotPassword = () => {
@@ -26,6 +27,9 @@ const ForgotPassword = () => {
                             <i className="fas fa-paper-plane me-2" /> Send
                         </button>
                     </div>
+                    <p className="my-2">
+                        Remmember your account? <Link to="/login" style={{ color: "crimson" }}>Login Now</Link>
+                    </p>
                 </form>
             </div>
         </div>

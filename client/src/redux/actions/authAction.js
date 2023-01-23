@@ -4,7 +4,7 @@ import { valid, validPass } from "../../utils/valid";
 import { GLOBALTYPES } from "./globalTypes";
 
 export const login = (data) => async (dispatch) => {
-    console.log(data);
+    // console.log(data);
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } })
         const res = await postDataAPI('auth/login', data);
@@ -62,7 +62,7 @@ export const register = (data) => async (dispatch) => {
     let error = valid(data);
     if (error.errLength > 0) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: error.errMsg });
-        return
+        return;
     }
 
     try {
@@ -100,18 +100,23 @@ export const forgotPassword = (account) => async (dispatch) => {
 
 export const resetPassword = (password, cf_password, token) => async (dispatch) => {
     try {
-        const result = await checkTokenExp(token, dispatch)
+        const result = await checkTokenExp(token, dispatch);
+        console.log({ result });
         const access_token = result ? result : token;
 
-        const error = validPass(password, cf_password);
-        if (error.errLength > 0)
-            return dispatch({ type: GLOBALTYPES.ALERT, payload: { error: error.errMsg } });
-        
+        let error = validPass(password, cf_password);
+        if (error.errLength > 0) {
+            dispatch({ type: GLOBALTYPES.ALERT, payload: error.errMsg });
+            return;
+        }
+
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } })
+
         const res = await putDataAPI("user/reset-password", { password }, access_token);
 
-        dispatch({ type: GLOBALTYPES.ALERT, payload: {success: res.data.msg}});
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
     } catch (err) {
-        console.log(err);
+        console.log(err.response.data);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
     }
 }
