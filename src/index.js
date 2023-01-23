@@ -11,6 +11,7 @@ const { accessLogStream, errorLogStream, getCustomErrorMorganFormat } = require(
 const { defaultSocket } = require("./socket-routers/index.routing");
 const { userSocket } = require("./socket-routers/user-socket.routing");
 const { messageSocket } = require("./socket-routers/message-socket.routing");
+const { callSocket } = require("./socket-routers/call-socket.routing");
 
 // connect DB
 connectDB();
@@ -46,8 +47,17 @@ const io = require("socket.io")(http);
 const onConnection = async (socket) => {
     
     console.log("new connection");
+    
+    // User join - online
     userSocket(io, socket, users);
+    
+    // Message
     messageSocket(io, socket, users);
+    
+    // Call user
+    callSocket(io, socket, users);
+    
+    // User disconnect - offline
     defaultSocket(io, socket, users);
 }
 
