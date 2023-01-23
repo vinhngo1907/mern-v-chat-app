@@ -3,6 +3,10 @@ const messageSocketController = {
         console.log(users)
         const user = users.find(user => user.id === data.recipient)
         user && socket.to(`${user.socketId}`).emit('addMessageToClient', data)
+    },
+
+    deleteMessage: async (io, socket, users, data) =>{
+        
     }
 }
 
