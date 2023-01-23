@@ -8,7 +8,7 @@ class APIFeautres {
         this.queryStr = queryStr;
     }
 
-    paginatin() {
+    paginating() {
         const page = this.queryStr.page * 1 || 1;
         const limit = this.queryStr.limit * 1 || 9;
         const skip = (page - 1) * limit;
@@ -65,11 +65,48 @@ const messageController = {
                     { sender: req.user._id, recipient: req.params.id },
                     { sender: req.params.id, recipient: req.user._id }
                 ]
-            }), req.query);
+            }), req.query).paginating();
 
             const messages = await features.query.sort("-createdAt");
 
             res.json({ messages, result: messages.length });
+        } catch (error) {
+            console.log(error);
+            req.error = error;
+            return res.status(500).json({ msg: error.message });
+        }
+    },
+    editMessage: async (req, res) => {
+        try {
+            const { sender, recipient, media, text, call } = req.body;
+            if (sender !== req.user._id) {
+                req.error = { message: "You don't have joined this conversation" }
+                return res.status(400).json({ msg: "You don't have joined this conversation" });
+            }
+
+            const conversation = await conversationModel.findOne({
+                $or: [
+                    { recipients: [sender, recipient] },
+                    { recipients: [recipient, sender] }
+                ]
+            });
+            if (!conversation) {
+                req.error = { message: "This conversation not found" }
+                return res.status(400).json({ msg: "This conversation not found" });
+            }
+
+            const updatedMess = await messageModel.findOneAndUpdate({
+                _id: req.params.id, sender: req.user._id, conversation: conversation._id
+            }, {
+                sender, recipient, media, text, call
+            });
+
+            if (!updatedMess) {
+                req.error = { message: "This message not found" }
+                return res.status(400).json({ msg: "This message not found" });
+            }
+
+            res.json({ msg: "Updated message successfully", message: updatedMess });
         } catch (error) {
             console.log(error);
             req.error = error;

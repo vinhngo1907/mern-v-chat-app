@@ -341,7 +341,17 @@
     opacity: 0;
 }
 
-.chat_content:hover .fa-trash {
+.chat_content .fa-edit {
+    position: absolute;
+    top: 50%;
+    left: -35px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+}
+
+.chat_content:hover .fa-trash, .chat_content:hover .fa-edit {
     opacity: 1;
 }
 
