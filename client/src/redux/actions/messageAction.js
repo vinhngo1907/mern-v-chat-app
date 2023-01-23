@@ -8,6 +8,7 @@ export const MESSAGE_TYPES = {
     GET_MESSAGES: 'GET_MESSAGES',
     CHECK_ONLINE_OFFLINE: "CHECK_ONLINE_OFFLINE",
     DELETE_MESSAGE: "DELETE_MESSAGE",
+    EDIT_MESSAGE: "EDIT_MESSAGE",
     DELETE_CV: "DELETE_CV",
 }
 
@@ -61,11 +62,12 @@ export const getMessages = ({ id, auth, page = 1 }) => async (dispatch) => {
     }
 }
 
-export const editMessage = ({id, msg, auth, data, socket}) => async (dispatch) =>{
+export const editMessage = ({ id, msg, auth, data, socket }) => async (dispatch) => {
     const newData = editData(data, msg, id);
-    try{
+    dispatch({ type: MESSAGE_TYPES.EDIT_MESSAGE, payload: { newData, _id: msg.recipient } });
+    try {
         await putDataAPI(`message/${msg._id}`, auth.token)
-    }catch(err){
+    } catch (err) {
         console.log(err);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
     }
@@ -74,7 +76,7 @@ export const editMessage = ({id, msg, auth, data, socket}) => async (dispatch) =
 export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) => {
     const newData = deleteData(data, msg._id);
     dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: { newData, _id: msg.recipient } });
-    socket.emit('deleteMessage', { ...msg });
+    socket.emit('deleteMessage', { newData, _id: msg.sender, recipient: msg.recipient });
     try {
         await deleteDataAPI(`message/${msg._id}`, auth.token);
     } catch (err) {
@@ -86,7 +88,7 @@ export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) =
 export const deleteConversation = ({ id, auth, users }) => async (dispatch) => {
     try {
         const newCV = deleteData(users, id);
-        dispatch({ type: MESSAGE_TYPES.DELETE_CV, payload: {newCV, _id: id} });
+        dispatch({ type: MESSAGE_TYPES.DELETE_CV, payload: { newCV, _id: id } });
         await deleteDataAPI(`conversation/${id}`, auth.token);
     } catch (err) {
         console.log(err);

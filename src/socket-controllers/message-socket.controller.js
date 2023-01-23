@@ -17,7 +17,10 @@ const messageSocketController = {
     },
     deleteMessage: async (io, socket, users, data) => {
         try {
-            console.log(data);
+            // console.log(">>>>>>>>", data);
+            const user = users.find(user => user.id === data.recipient);
+            // console.log({user})
+            user && socket.to(`${user.socketId}`).emit('deleteMessageToClient', data);
         } catch (err) {
             console.log(err);
         }
