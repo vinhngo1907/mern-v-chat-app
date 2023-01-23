@@ -13,9 +13,11 @@ import { refreshToken } from './redux/actions/authAction';
 import io from 'socket.io-client'
 import SocketClient from "./SocketClient";
 import { GLOBALTYPES } from "./redux/actions/globalTypes";
+import CallModal from './components/message/CallModal'
+import Peer from 'peerjs'
 
 function App() {
-	const { auth, status, modal } = useSelector(state => state);
+	const { auth, status, modal, call } = useSelector(state => state);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -26,6 +28,14 @@ function App() {
 
 	}, [dispatch]);
 
+	useEffect(() => {
+		const newPeer = new Peer(undefined, {
+		  path: '/', secure: true
+		});
+		
+		dispatch({ type: GLOBALTYPES.PEER, payload: newPeer })
+	  },[dispatch]);
+
 	return (
 		<Router>
 			<Alert />
@@ -33,6 +43,7 @@ function App() {
 			<div className={`App ${(status || modal) && 'mode'}`}>
 				<div className="main">
 					{auth.token && <SocketClient />}
+					{call && <CallModal />}
 					<Switch>
 						<Route exact path="/" component={auth.token ? Home : Login} />
 						<Route exact path="/login" component={Login} />
