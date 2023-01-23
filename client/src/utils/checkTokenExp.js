@@ -10,6 +10,12 @@ export const checkTokenExp = async (token, dispatch) => {
 
     const res = await postDataAPI('auth/refresh-token');
 
-    dispatch({ type: GLOBALTYPES.AUTH, payload: res.data })
+    dispatch({
+        type: GLOBALTYPES.AUTH, 
+        payload: {
+            user: res.data.user,
+            token: res.data.access_token
+        }
+    })
     return res.data.access_token;
 }
