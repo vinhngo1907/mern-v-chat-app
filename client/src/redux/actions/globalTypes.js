@@ -6,7 +6,9 @@ export const GLOBALTYPES = {
     ONLINE:"ONLINE",
     OFFLINE: "OFFLINE",
     THEME:"THEME",
-    SOCKET:"SOCKET"
+    SOCKET:"SOCKET",
+    CALL: "CALL",
+    PEER: "PEER"
 }
 
 export const editData = (data, post, id) =>{

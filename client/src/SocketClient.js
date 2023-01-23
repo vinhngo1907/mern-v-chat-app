@@ -76,6 +76,12 @@ const SocketClient = () => {
         return () => socket.off('CheckUserOffline')
     }, [socket, dispatch]);
 
+    // Call user
+    useEffect(() => {
+        socket.on('callUserToClient', data => {
+            console.log(data);
+        })
+    }, [socket, dispatch]);
     return (
         <>
             <audio controls ref={audioRef} style={{ display: 'none' }}>
