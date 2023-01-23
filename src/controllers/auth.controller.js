@@ -78,16 +78,17 @@ const authController = {
     forgotPassword: async (req, res) => {
         try {
             const { email } = req.body;
-            const user = await userModel.findOne({email: email});
-            if(!user) {
+            const user = await userModel.findOne({ email: email }).select("-password");
+            if (!user) {
                 req.error = { message: "This email is already exist." }
                 return res.status(400).json({ msg: "This email is already exist." });
             }
-            const access_token = generateAccessToken({userId: user._id});
+
+            const access_token = generateAccessToken({ userId: user._id });
             const url = `${CLIENT_URL}/reset-password/${access_token}`
             sendMail(email, url, "Verify your email address.");
 
-            res.status(200).json({msg:"Success, Please check email!"})
+            res.status(200).json({ msg: "Success, Please check email!" })
         } catch (error) {
             console.log(error);
             req.error = error;

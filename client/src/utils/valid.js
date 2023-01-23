@@ -34,6 +34,24 @@ export const valid = ({ username, fullname, email, cf_password, password }) => {
     }
 }
 
+export const validPass = (password, cf_password) => {
+    let err = {}
+    if (!password) {
+        err.password = "Password can not be blank"
+    } else if (password.length < 6) {
+        err.password = "Password must be at least 6 characters"
+    }
+
+    if (password !== cf_password) {
+        err.cf_password = "Password does not match"
+    }
+
+    return {
+        errMsg: err,
+        errLength: Object.keys(err).length
+    }
+}
+
 function validEmail(email) {
     // eslint-disable-next-line
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

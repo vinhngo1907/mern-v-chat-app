@@ -53,7 +53,7 @@ const Login = () => {
                 <button type="submit" className="btn btn-dark w-100" disabled={(account && password) ? false : true}>Submit</button>
                 <small className="row my-2 text-primary" style={{ cursor: 'pointer' }}>
                     <span className="col-6">
-                        <Link to='/forgot_password'>
+                        <Link to='/forgot-password'>
                             Forgot password?
                         </Link>
                     </span>

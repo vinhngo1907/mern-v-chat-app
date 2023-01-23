@@ -37,4 +37,12 @@ router.post('/refresh-token', authCtrl.refreshToken);
 */
 router.post('/logout', authCtrl.logout);
 
+/**  
+ * @route POST api/auth/logout
+ * @desc Logout
+ * @access Public
+*/
+
+router.post('/forgot-password', authCtrl.forgotPassword);
+
 module.exports = router;

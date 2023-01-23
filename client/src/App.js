@@ -13,8 +13,10 @@ import { refreshToken } from './redux/actions/authAction';
 import io from 'socket.io-client'
 import SocketClient from "./SocketClient";
 import { GLOBALTYPES } from "./redux/actions/globalTypes";
-import CallModal from './components/message/CallModal'
+import CallModal from './components/messages/CallModal'
 import Peer from 'peerjs'
+import ForgotPassword from "./pages/forgot-password";
+import ResetPasword from "./pages/reset-password/[id]";
 
 function App() {
 	const { auth, status, modal, call } = useSelector(state => state);
@@ -48,6 +50,8 @@ function App() {
 						<Route exact path="/" component={auth.token ? Home : Login} />
 						<Route exact path="/login" component={Login} />
 						<Route exact path="/register" component={Register} />
+						<Route exact path="/forgot-password" component={ForgotPassword} />
+						<Route exact path="/reset-password/:id" component={ResetPasword} />
 						<PrivateRouter exact path="/:page" component={PageRender} />
 						<PrivateRouter exact path="/:page/:id" component={PageRender} />
 					</Switch>
