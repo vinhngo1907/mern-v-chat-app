@@ -31,6 +31,12 @@ const SocketClient = () => {
         return () => socket.off('addMessageToClient');
     }, [socket, dispatch]);
 
+    useEffect(() => {
+        socket.on('deleteMessageToClient', msg => {
+            dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: msg });
+        })
+        return () => socket.off('deleteMessageToClient');
+    }, [socket, dispatch])
     // Check user online
     useEffect(() => {
         socket.emit("checkUserOnline", auth.user);
@@ -61,12 +67,13 @@ const SocketClient = () => {
 
     // check user offline
     useEffect(() => {
-        socket.on('CheckUserOffline', id =>{
-            dispatch({type: GLOBALTYPES.OFFLINE, payload: id})
+        socket.on('CheckUserOffline', id => {
+            dispatch({ type: GLOBALTYPES.OFFLINE, payload: id })
         });
-        
+
         return () => socket.off('CheckUserOffline')
-    }, [socket, dispatch])
+    }, [socket, dispatch]);
+
     return (
         <>
             <audio controls ref={audioRef} style={{ display: 'none' }}>

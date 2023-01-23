@@ -9,10 +9,18 @@ const messageSocketController = {
         }
     },
     editMessage: async (io, socket, users, data) => {
-
+        try {
+            console.log(data);
+        } catch (err) {
+            console.log(err);
+        }
     },
     deleteMessage: async (io, socket, users, data) => {
-
+        try {
+            console.log(data);
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 

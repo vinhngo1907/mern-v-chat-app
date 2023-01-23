@@ -1,5 +1,5 @@
-import { deleteData, GLOBALTYPES } from "./globalTypes";
-import { deleteDataAPI, getDataAPI, postDataAPI } from "../../utils/fetchData";
+import { deleteData, editData, GLOBALTYPES } from "./globalTypes";
+import { deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from "../../utils/fetchData";
 
 export const MESSAGE_TYPES = {
     ADD_USER: "ADD_USER",
@@ -57,13 +57,24 @@ export const getMessages = ({ id, auth, page = 1 }) => async (dispatch) => {
 
     } catch (err) {
         console.log(err);
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
     }
 }
 
-export const deleteMessage = ({ msg, auth, data }) => async (dispatch) => {
+export const editMessage = ({id, msg, auth, data, socket}) => async (dispatch) =>{
+    const newData = editData(data, msg, id);
+    try{
+        await putDataAPI(`message/${msg._id}`, auth.token)
+    }catch(err){
+        console.log(err);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+    }
+}
+
+export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) => {
     const newData = deleteData(data, msg._id);
     dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: { newData, _id: msg.recipient } });
+    socket.emit('deleteMessage', { ...msg });
     try {
         await deleteDataAPI(`message/${msg._id}`, auth.token);
     } catch (err) {
