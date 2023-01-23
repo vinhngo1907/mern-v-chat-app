@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MESSAGE_TYPES } from './redux/actions/messageAction';
+import audiobell from './audio/got-it-done-613.mp3'
 
 const SocketClient = () => {
     const { auth, socket } = useSelector(state => state);
     const dispatch = useDispatch();
+    const audioRef = useRef();
 
     //Join user
     useEffect(() => {
@@ -29,7 +31,11 @@ const SocketClient = () => {
     }, [socket, dispatch])
 
     return (
-        <></>
+        <>
+            <audio controls ref={audioRef} style={{display:'none'}}>
+                <source src={audiobell} type="audio/mp3"/>
+            </audio>
+        </>
     )
 }
 
