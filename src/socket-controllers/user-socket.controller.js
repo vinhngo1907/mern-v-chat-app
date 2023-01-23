@@ -23,6 +23,21 @@ const userSocketController = {
         } catch (err) {
             console.log(err);
         }
+    },
+    checkUserOffline: async (io, socket, users) => {
+        try {
+            const data = users.find(user => user.socketId === socket.id);
+            if (data) {
+                const clients = users.filter(user => data.following.find(u => u === user.id));
+                if (clients.length > 0) {
+                    clients.forEach(client =>
+                        socket.to(`${client.socketId}`).emit("checkUserOffline", client.id)
+                    )
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 
