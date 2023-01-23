@@ -35,6 +35,7 @@ const sendMail = async (to, url, txt) => {
             })
         }
         const result = await transporter.sendMail(mailOptions);
+        return result;
     } catch (error) {
         console.log(error);
     }
