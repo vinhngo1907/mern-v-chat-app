@@ -72,7 +72,13 @@ const messageReducer = (state = initialState, action) => {
                 users: action.payload.newCV,
                 data: newMesssages
             };
-        
+        case MESSAGE_TYPES.CHECK_ONLINE_OFFLINE:
+            return {
+                ...state,
+                users: state.users.map(u =>
+                    action.payload.includes(u._id) ? { ...u, online: true } : { ...u, online: false }
+                )
+            }
         default:
             return state;
     }
