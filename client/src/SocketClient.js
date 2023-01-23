@@ -9,7 +9,7 @@ const SocketClient = () => {
     const dispatch = useDispatch();
     const audioRef = useRef();
 
-    //Join user
+    // Join user
     useEffect(() => {
         socket.emit('joinUser', auth.user)
     }, [socket, auth.user]);
@@ -33,10 +33,12 @@ const SocketClient = () => {
 
     useEffect(() => {
         socket.on('deleteMessageToClient', msg => {
+            // console.log({msg});
             dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: msg });
         })
         return () => socket.off('deleteMessageToClient');
-    }, [socket, dispatch])
+    }, [socket, dispatch]);
+
     // Check user online
     useEffect(() => {
         socket.emit("checkUserOnline", auth.user);
@@ -44,7 +46,7 @@ const SocketClient = () => {
 
     useEffect(() => {
         socket.on('checkUserOnlineToMe', data => {
-            console.log({ data });
+            // console.log({ data });
             data.forEach(item => {
                 if (!online.includes(item.id)) {
                     dispatch({ type: GLOBALTYPES.ONLINE, payload: item.id })
@@ -57,7 +59,7 @@ const SocketClient = () => {
 
     useEffect(() => {
         socket.on('checkUserOnlineToClient', id => {
-            console.log(id);
+            // console.log(id);
             if (!online.includes(id)) {
                 dispatch({ type: GLOBALTYPES.ONLINE, payload: id })
             }
