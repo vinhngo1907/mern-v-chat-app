@@ -1,5 +1,6 @@
-import { postDataAPI } from "../../utils/fetchData";
-import { valid } from "../../utils/valid";
+import { checkTokenExp } from "../../utils/checkTokenExp";
+import { postDataAPI, putDataAPI } from "../../utils/fetchData";
+import { valid, validPass } from "../../utils/valid";
 import { GLOBALTYPES } from "./globalTypes";
 
 export const login = (data) => async (dispatch) => {
@@ -67,9 +68,9 @@ export const register = (data) => async (dispatch) => {
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
         const res = await postDataAPI('auth/register', data);
-        
+
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
-        
+
         localStorage.setItem("firstLogin", true);
 
         dispatch({
@@ -81,6 +82,35 @@ export const register = (data) => async (dispatch) => {
         });
 
     } catch (err) {
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: error.response.data.msg || err } })
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
+    }
+}
+
+
+export const forgotPassword = (account) => async (dispatch) => {
+    try {
+        const res = await postDataAPI("auth/forgot-password", { email: account });
+
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } })
+    } catch (err) {
+        console.log(err);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+    }
+}
+
+export const resetPassword = (password, cf_password, token) => async (dispatch) => {
+    try {
+        const result = await checkTokenExp(token, dispatch)
+        const access_token = result ? result : token;
+
+        const error = validPass(password, cf_password);
+        if (error.errLength > 0)
+            return dispatch({ type: GLOBALTYPES.ALERT, payload: { error: error.errMsg } });
+        
+        const res = await putDataAPI("user/reset-password", { password }, access_token);
+
+        dispatch({ type: GLOBALTYPES.ALERT, payload: {success: res.data.msg}});
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
     }
 }
