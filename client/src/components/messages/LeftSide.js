@@ -8,7 +8,7 @@ import { getDataAPI } from "../../utils/fetchData";
 import UserCard from "../UserCard";
 
 const LeftSide = () => {
-	const { auth, message } = useSelector(state => state);
+	const { auth, message, online } = useSelector(state => state);
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const { id } = useParams();
@@ -43,8 +43,15 @@ const LeftSide = () => {
 		setSearch('');
 		setSearchUsers([]);
 		dispatch({ type: MESSAGE_TYPES.ADD_USER, payload: { ...user, text: '', media: [] } });
+		dispatch({ type: MESSAGE_TYPES.CHECK_ONLINE_OFFLINE, payload: online })
 		return history.push(`/messages/${user._id}`)
 	}
+
+	useEffect(() => {
+		if (message.firstLoad) {
+			dispatch({ type: MESSAGE_TYPES.CHECK_ONLINE_OFFLINE, payload: online })
+		}
+	}, [online, message.firstLoad, dispatch])
 
 	return (
 		<>

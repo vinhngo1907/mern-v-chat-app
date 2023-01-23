@@ -8,7 +8,7 @@ export const MESSAGE_TYPES = {
     GET_MESSAGES: 'GET_MESSAGES',
     CHECK_ONLINE_OFFLINE: "CHECK_ONLINE_OFFLINE",
     DELETE_MESSAGE: "DELETE_MESSAGE",
-    DELETE_USER: "DELETE_USER",
+    DELETE_CV: "DELETE_CV",
 }
 
 export const getConversations = ({ page, auth }) => async (dispatch) => {
@@ -74,7 +74,9 @@ export const deleteMessage = ({ msg, auth, data }) => async (dispatch) => {
 
 export const deleteConversation = ({ id, auth, users }) => async (dispatch) => {
     try {
-
+        const newCV = deleteData(users, id);
+        dispatch({ type: MESSAGE_TYPES.DELETE_CV, payload: {newCV, _id: id} });
+        await deleteDataAPI(`conversation/${id}`, auth.token);
     } catch (err) {
         console.log(err);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
