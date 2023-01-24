@@ -64,7 +64,7 @@
 
 .message_chat_list {
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 125px);
     overflow-y: auto;
 }
 
@@ -106,6 +106,7 @@
     justify-content: space-between;
     padding: 0 10px;
     border-top: 1px solid #ddd;
+    z-index: 3;
 }
 
 .chat_input input {
@@ -180,8 +181,8 @@
 
 /* -------- Chat Container ----- */
 .chat_container {
-    display: flex;
-    position: relative;
+    /* display: flex;
+    position: relative; */
     width: 100%;
     height: calc(100% - 110px);
     overflow-y: auto;
@@ -203,16 +204,16 @@
     opacity: 0;
     display: none;
     height: calc(100% - 110px);
-    min-height: 100%;
+    /* min-height: 100%; */
     position: absolute;
-    top: 0;
+    top: 60px;
     right: 0;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px 1px;
     background: var(--main-bg-color);
     color: var(--main-color);
     overflow-y: auto;
     border-radius: 0 3px 3px 1px;
-    /* z-index: 9; */
+    z-index: 0;
     /* transition: opacity .3s ease-in, transform .3s; */
     transition: all .3s;
 }

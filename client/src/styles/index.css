@@ -91,6 +91,38 @@ img {
 	text-decoration: none;
 }
 
+.btn-view.btn-load-more {
+	background: #fff;
+	border: medium none;
+	border-radius: 100%;
+	color: transparent;
+	display: block;
+	height: 50px;
+	margin: 30px auto 0;
+	position: relative;
+	width: 50px;
+	transition: all 0.2s linear 0s;
+	z-index: 77;
+}
+
+.btn-view.btn-load-more::before {
+	color: #333;
+	content: "\f059";
+	font-family: fontawesome;
+	left: 50%;
+	opacity: 1;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(0deg);
+	z-index: 111;
+	transition: all 0.2s linear 0s;
+}
+
+.btn-view.btn-load-more:hover::before {
+	color: #fff;
+	transform: translate(-50%, -50%) rotate(360deg);
+}
+
 /* -------- AUTH ---------- */
 @import url("./auth.css");
 
@@ -126,5 +158,9 @@ img {
 
 	.status {
 		padding: 20px 10px;
+	}
+
+	.message_sidebar {
+		width: 70%;
 	}
 }

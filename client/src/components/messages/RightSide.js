@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { addMessage, deleteConversation, getMessages } from "../../redux/actions/messageAction";
+import { addMessage, deleteConversation, getMessages, loadMoreMessages } from "../../redux/actions/messageAction";
 import UserCard from "../UserCard";
 import Icons from "../Icons";
 import { GLOBALTYPES } from "../../redux/actions/globalTypes";
@@ -24,9 +24,15 @@ const RightSide = () => {
 
     const { id } = useParams();
     const [data, setData] = useState([]);
+    const [result, setResult] = useState(9);
+    const [page, setPage] = useState(0);
+    const [isLoadMore, setIsLoadMore] = useState(0);
+
     const [showSidebar, setShowSidebar] = useState(false);
 
     const refDisplay = useRef();
+    const pageEnd = useRef();
+
     useEffect(() => {
         if (id && message.users.length > 0) {
             setTimeout(() => {
@@ -39,8 +45,12 @@ const RightSide = () => {
     }, [id, message.users]);
 
     useEffect(() => {
-        const newData = message.data.find(item => item._id === id)
-        if (newData) setData(newData.messages);
+        const newData = message.data.find(item => item._id === id);
+        if (newData) {
+            setData(newData.messages);
+            setResult(newData.result);
+            setPage(newData.page);
+        }
 
     }, [id, message.data]);
 
@@ -84,8 +94,6 @@ const RightSide = () => {
         let newMedia = [];
         if (media.length > 0) newMedia = await imageUpload(media);
 
-        console.log(newMedia)
-
         const msg = {
             sender: auth.user._id,
             recipient: id,
@@ -115,6 +123,30 @@ const RightSide = () => {
         }
     }
 
+    // Load More
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                setIsLoadMore(p => p + 1)
+            }
+        }, {
+            threshold: 0.1
+        })
+
+        observer.observe(pageEnd.current)
+    }, [setIsLoadMore])
+
+    useEffect(() => {
+        if (isLoadMore > 1) {
+            if (result >= page * 9) {
+                dispatch(loadMoreMessages({ auth, id, page: page + 1 }))
+                setIsLoadMore(1)
+            }
+        }
+        // eslint-disable-next-line
+    }, [isLoadMore])
+
+
     return (
         <>
             <div className="message_header p-3" style={{ cursor: "pointer" }}>
@@ -138,7 +170,7 @@ const RightSide = () => {
                     </UserCard>
                 }
             </div>
-            <div className="chat_container">
+            <div className="chat_container" style={{ height: media.length > 0 ? 'calc(100% - 180px)' : '' }} >
                 <div className="chat_display" ref={refDisplay}>
                     {
                         data.map((item, index) => (
@@ -164,6 +196,10 @@ const RightSide = () => {
                             <img src={LoadIcon} alt="loading" />
                         </div>
                     }
+                    <button className="btn-view btn-load-more"
+                        ref={pageEnd} style={{ marginTop: '-25px', opacity: 0 }} >
+                        Load More
+                    </button>
                 </div>
                 <div className={`message_sidebar ${theme ? 'dark' : 'light'} ${showSidebar ? 'show' : ''}`}>
                     {

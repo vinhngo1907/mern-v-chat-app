@@ -63,6 +63,18 @@ export const getMessages = ({ id, auth, page = 1 }) => async (dispatch) => {
     }
 }
 
+export const loadMoreMessages = ({ auth, id, page = 1 }) => async (dispatch) => {
+    try {
+        const res = await getDataAPI(`message/${id}?limit=${page * 9}`, auth.token);
+        const newData = { ...res.data, messages: res.data.messages.reverse() }
+        // console.log(res.data)
+        dispatch({ type: MESSAGE_TYPES.GET_MESSAGES, payload: { ...newData, _id: id, page } });
+    } catch (err) {
+        console.log(err);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } });
+    }
+}
+
 export const editMessage = ({ id, msg, auth, data, socket }) => async (dispatch) => {
     const newData = editData(data, msg, id);
     dispatch({ type: MESSAGE_TYPES.EDIT_MESSAGE, payload: { newData, _id: msg.recipient } });
