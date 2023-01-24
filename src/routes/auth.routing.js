@@ -7,7 +7,7 @@ const authCtrl = require("../controllers/auth.controller");
  * @desc Register user
  * @access Public
 */
-router.post('/register',authCtrl.register);
+router.post('/register', authCtrl.register);
 
 /** 
  * @route POST api/auth/login
@@ -44,5 +44,12 @@ router.post('/logout', authCtrl.logout);
 */
 
 router.post('/forgot-password', authCtrl.forgotPassword);
+
+/**  
+ * @route POST api/auth/google-login
+ * @desc Google login
+ * @access Public
+*/
+router.post('/googole-login', authCtrl.googleLogin)
 
 module.exports = router;

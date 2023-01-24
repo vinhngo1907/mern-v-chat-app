@@ -3,8 +3,11 @@ const bcrypt = require("bcrypt");
 const { validEmail } = require("../validations/valid");
 const { generateAccessToken, generateRefreshToken, generateActiveToken } = require("../utils/generateToken.util");
 const sendMail = require("../utils/sendMail.util");
-const { CLIENT_URL, ACTIVE_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
+const { CLIENT_URL, ACTIVE_TOKEN_SECRET, REFRESH_TOKEN_SECRET, CLIENT_ID } = process.env;
 const jwt = require("jsonwebtoken");
+const { google } = require('googleapis');
+const { OAuth2 } = google.auth;
+const client = new OAuth2(`${CLIENT_ID}`);
 
 const authController = {
     login: async (req, res) => {
@@ -134,6 +137,17 @@ const authController = {
         try {
             res.clearCookie('rf_v_token', { path: '/api/auth/refresh-token' });
             return res.json({ msg: "Logout success" });
+        } catch (error) {
+            req.error = error;
+            return res.status(500).json({ msg: error.message });
+        }
+    },
+    googleLogin: async (req, res) => {
+        try {
+            const { tokenId } = req.body;
+            const verify = await client.verifyIdToken({ idToken: tokenId, audience: `${CLIENT_ID}` });
+            const { email_verified, email, name, picture } = verify.payload;
+            res.status(200).json({ msg: "Success" })
         } catch (error) {
             req.error = error;
             return res.status(500).json({ msg: error.message });
