@@ -166,6 +166,8 @@ const authController = {
                     }
                     registerUser(newUser, res, req);
                 }
+            } else {
+                return res.status(400).json({ msg: "Login failure, please try again!" })
             }
         } catch (error) {
             req.error = error;
@@ -217,15 +219,16 @@ async function registerUser(user, res, req) {
 
         const newUser = await new userModel({ ...user });
         await newUser.save();
-        generateRefreshToken({ userId: newUser._id });
+        generateRefreshToken({ userId: newUser._id }, res);
 
-        const access_token = generateRefreshToken({ userId: newUser._id });
+        const access_token = generateAccessToken({ userId: newUser._id });
         res.status(200).json({
             msg: "Register in successfully",
             user: { ...newUser._doc, password: "" },
             access_token
         });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ msg: error.message });
     }
 }

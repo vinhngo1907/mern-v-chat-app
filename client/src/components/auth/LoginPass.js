@@ -1,80 +1,49 @@
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import { Link } from 'react-router-dom'
-import { useState, useContext } from 'react'
-import { AuthContext } from '../../contexts/AuthContext'
-import AlertMessage from '../layout/AlertMessage'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { login } from "../../redux/actions/authAction";
 
-const LoginForm = () => {
-	// Context
-	const { loginUser } = useContext(AuthContext)
+const LoginPass = () => {
+	const initialState = {
+		account: "",
+		password: ""
+	}
+	const dispatch = useDispatch();
+	const [userData, setUserData] = useState(initialState);
+	const [typePass, setTypePass] = useState(false);
+	const { account, password } = userData;
 
-	// Local state
-	const [loginForm, setLoginForm] = useState({
-		username: '',
-		password: ''
-	})
+	const handleChangeInput = (e) => {
+		setUserData({ ...userData, [e.target.name]: e.target.value })
+	}
 
-	const [alert, setAlert] = useState(null)
-
-	const { username, password } = loginForm
-
-	const onChangeLoginForm = event =>
-		setLoginForm({ ...loginForm, [event.target.name]: event.target.value })
-
-	const login = async event => {
-		event.preventDefault()
-
-		try {
-			const loginData = await loginUser(loginForm)
-			if (!loginData.success) {
-				setAlert({ type: 'danger', message: loginData.message })
-				setTimeout(() => setAlert(null), 5000)
-			}
-		} catch (error) {
-			console.log(error)
-		}
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		dispatch(login(userData));
 	}
 
 	return (
-		<>
-			<Form className='my-4' onSubmit={login}>
-				<AlertMessage info={alert} />
+		<form className='form-group mb-3' onSubmit={handleSubmit}>
+			<div className="form-group">
+				<label htmlFor="exampleInputEmail1">Account</label>
+				<input className="form-control" type="text" id="exampleInputEmail1" name="account"
+					onChange={handleChangeInput} value={account}
+				/>
+			</div>
+			<div className="form-group">
+				<label htmlFor="exampleInputPassword1">Password</label>
+				<div className="pass">
+					<input type={typePass ? 'text' : 'password'}
+						className="form-control" id="exampleInputPassword1" name="password"
+						onChange={handleChangeInput} value={password}
+					/>
+					<small onClick={() => setTypePass(!typePass)}>{typePass ? 'hide' : 'show'}</small>
+				</div>
+			</div>
+			<button type="submit" className="btn btn-dark w-100" disabled={(account && password) ? false : true}>Submit</button>
 
-				<Form.Group>
-					<Form.Control
-						type='text'
-						placeholder='Username'
-						name='username'
-						required
-						value={username}
-						onChange={onChangeLoginForm}
-					/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Control
-						type='password'
-						placeholder='Password'
-						name='password'
-						required
-						value={password}
-						onChange={onChangeLoginForm}
-					/>
-				</Form.Group>
-				<Button variant='success' type='submit'>
-					Login
-				</Button>
-			</Form>
-			<p>
-				Don't have an account?
-				<Link to='/register'>
-					<Button variant='info' size='sm' className='ml-2'>
-						Register
-					</Button>
-				</Link>
-			</p>
-		</>
+
+		</form>
 	)
 }
 
-export default LoginForm
+export default LoginPass;
