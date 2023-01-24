@@ -20,9 +20,7 @@ const messageController = {
     createMessage: async (req, res) => {
         try {
             const { sender, recipient, text, call, media } = req.body;
-            if (!recipient || !text.trim()) {
-                return;
-            }
+            if(!recipient || (!text.trim() && media.length === 0 && !call)) return;
 
             const users = await userModel.find({ _id: recipient, followers: sender });
             if (users.length < 1) {

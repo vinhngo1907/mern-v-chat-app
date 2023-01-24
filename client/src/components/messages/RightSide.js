@@ -10,6 +10,7 @@ import { imageShow, videoShow } from "../../utils/mediaShow";
 import MsgDisplay from "./MsgDisplay";
 import Avatar from "../Avatar";
 import moment from "moment";
+import LoadIcon from '../../assets/loading.gif'
 
 const RightSide = () => {
     const { auth, theme, message, socket } = useSelector(state => state);
@@ -19,6 +20,8 @@ const RightSide = () => {
     const [text, setText] = useState("");
 
     const [media, setMedia] = useState([]);
+    const [loadMedia, setLoadMedia] = useState(false);
+
     const { id } = useParams();
     const [data, setData] = useState([]);
     const [showSidebar, setShowSidebar] = useState(false);
@@ -47,8 +50,8 @@ const RightSide = () => {
             if (message.data.every(item => item._id !== id)) {
                 await dispatch(getMessages({ id, auth }))
                 setTimeout(() => {
-                    refDisplay.current.scrollIntoView({behavior: 'smooth', block: 'end'})
-                },50)
+                    refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+                }, 50)
             }
         }
         getMessagesData()
@@ -74,21 +77,29 @@ const RightSide = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!text.trim() && media.length === 0) return;
+        setMedia([]);
+        setText("");
+        setLoadMedia(true);
 
         let newMedia = [];
-        if (media.length > 0)
-            newMedia = await imageUpload(media);
+        if (media.length > 0) newMedia = await imageUpload(media);
+
+        console.log(newMedia)
 
         const msg = {
             sender: auth.user._id,
             recipient: id,
             text,
-            media: newMedia
+            media: newMedia,
+            createdAt: new Date().toISOString()
         }
-        setMedia([]);
-        setText("");
 
-        dispatch(addMessage({ msg, auth, socket }));
+        setLoadMedia(false)
+        await dispatch(addMessage({ msg, auth, socket }));
+
+        if (refDisplay.current) {
+            refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        }
     }
     const handleDeleteMedia = (index) => {
         const newArr = [...media];
@@ -116,7 +127,7 @@ const RightSide = () => {
 
                             <i className="fas fa-video text-success mr-3" />
 
-                            <i className="fas fa-trash text-danger mr-3" 
+                            <i className="fas fa-trash text-danger mr-3"
                                 onClick={handleDeleteCV}
                             />
 
@@ -128,7 +139,7 @@ const RightSide = () => {
                 }
             </div>
             <div className="chat_container">
-                <div className="chat_display"  ref={refDisplay}>
+                <div className="chat_display" ref={refDisplay}>
                     {
                         data.map((item, index) => (
                             <div key={index}>
@@ -146,6 +157,12 @@ const RightSide = () => {
                                 }
                             </div>
                         ))
+                    }
+                    {
+                        loadMedia &&
+                        <div className="chat_row you_message">
+                            <img src={LoadIcon} alt="loading" />
+                        </div>
                     }
                 </div>
                 <div className={`message_sidebar ${theme ? 'dark' : 'light'} ${showSidebar ? 'show' : ''}`}>
@@ -179,6 +196,7 @@ const RightSide = () => {
                             </div>
                         </div>
                     }
+
                 </div>
             </div>
 

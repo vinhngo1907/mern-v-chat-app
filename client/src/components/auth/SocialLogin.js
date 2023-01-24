@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { GoogleLogin } from 'react-google-login-lite';
 import { FacebookLogin } from 'react-facebook-login-lite';
-import { gapi } from "gapi-script";
+// import { gapi } from "gapi-script";
 import { googleLogin } from "../../redux/actions/authAction";
 
 const SocialLogin = () => {
