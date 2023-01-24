@@ -50,6 +50,6 @@ router.post('/forgot-password', authCtrl.forgotPassword);
  * @desc Google login
  * @access Public
 */
-router.post('/googole-login', authCtrl.googleLogin)
+router.post('/google-login', authCtrl.googleLogin)
 
 module.exports = router;

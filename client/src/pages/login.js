@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
+import SocialLogin from "../components/auth/SocialLogin";
 import { login } from "../redux/actions/authAction";
 
 const Login = () => {
@@ -34,6 +35,7 @@ const Login = () => {
         <div className="auth_page">
             <form onSubmit={handleSubmit}>
                 <h3 className="text-uppercase text-center mb-4">V Chat App</h3>
+                <SocialLogin/>
                 <div className="form-group">
                     <label htmlFor="exampleInputEmail1">Account</label>
                     <input className="form-control" type="text" id="exampleInputEmail1" name="account"

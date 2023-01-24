@@ -47,7 +47,7 @@ const authController = {
                 return res.status(400).json({ msg: "This username or email is already exist" });
             }
 
-            hashedPassword = await bcrypt.hash(password, 12);
+            const hashedPassword = await bcrypt.hash(password, 12);
 
             const newUser = {
                 fullname, username, email, password: hashedPassword
@@ -71,7 +71,7 @@ const authController = {
                 req.error = { message: "Authenticated faild, please try again." }
                 return res.status(400).json({ msg: "Authenticated faild, please try again." })
             }
-            registerUser(userData, res);
+            registerUser(userData, res, req);
         } catch (error) {
             console.log(error);
             req.error = error;
@@ -146,8 +146,27 @@ const authController = {
         try {
             const { tokenId } = req.body;
             const verify = await client.verifyIdToken({ idToken: tokenId, audience: `${CLIENT_ID}` });
-            const { email_verified, email, name, picture } = verify.payload;
-            res.status(200).json({ msg: "Success" })
+            // console.log(verify.payload);
+            
+            const { email_verified, email, name, picture, given_name, family_name } = verify.payload;
+            if (email_verified) {
+                const password = process.env.GOOGLE_SECRET + email;
+                const user = await userModel.findOne({ email: email })
+                if (user) {
+                    loginUser(user, password, res, req);
+                } else {
+                    const hashedPassword = await bcrypt.hash(password, 10);
+                    const newUser = {
+                        email,
+                        fullname: family_name + given_name,
+                        username: name,
+                        avatar: picture,
+                        password: hashedPassword,
+                        type: "google"
+                    }
+                    registerUser(newUser, res, req);
+                }
+            }
         } catch (error) {
             req.error = error;
             return res.status(500).json({ msg: error.message });
@@ -181,8 +200,21 @@ async function loginUser(user, password, res, req) {
     }
 }
 
-async function registerUser(user, res) {
+async function registerUser(user, res, req) {
     try {
+        const userExist = await userModel.findOne({
+            $or: [
+                { email: user.email },
+                { username: user.username }
+            ]
+        }).select("-password");
+
+        // check user
+        if (userExist) {
+            req.error = { message: "This username or email is already exist" }
+            return res.status(400).json({ msg: "This username or email is already exist" });
+        }
+
         const newUser = await new userModel({ ...user });
         await newUser.save();
         generateRefreshToken({ userId: newUser._id });
