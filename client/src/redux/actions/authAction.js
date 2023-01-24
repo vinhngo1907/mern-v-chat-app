@@ -110,11 +110,33 @@ export const resetPassword = (password, cf_password, token) => async (dispatch) 
             return;
         }
 
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } })
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
 
         const res = await putDataAPI("user/reset-password", { password }, access_token);
 
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
+    } catch (err) {
+        console.log(err.response.data);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+    }
+}
+
+export const googleLogin = (tokenId) => async (dispatch) => {
+    try {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
+        
+        const res = await postDataAPI('auth/google-login', { tokenId });
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
+
+        localStorage.setItem("firstLogin", true);
+
+        dispatch({
+            type: GLOBALTYPES.AUTH,
+            payload: {
+                user: res.data.user,
+                token: res.data.access_token
+            }
+        });
     } catch (err) {
         console.log(err.response.data);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
