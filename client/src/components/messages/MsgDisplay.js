@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { deleteMessage, editMessage } from "../../redux/actions/messageAction";
+import { imageShow, videoShow } from "../../utils/mediaShow";
 import Avatar from "../Avatar";
 
 const MsgDisplay = ({ user, msg, theme, data }) => {
@@ -35,6 +36,17 @@ const MsgDisplay = ({ user, msg, theme, data }) => {
                 <div className="chat_details">
                     {
                         msg.text && <p className="chat_text" style={{ filter: theme ? "invert(1)" : "invert(0)" }}>{msg.text}</p>
+                    }
+                    {
+                        msg.media.map((item, index) => (
+                            <div key={index}>
+                                {
+                                    item.url.match(/video/i)
+                                    ? videoShow(item.url, theme)
+                                    : imageShow(item.url, theme)
+                                }
+                            </div>
+                        ))
                     }
                 </div>
             </div>

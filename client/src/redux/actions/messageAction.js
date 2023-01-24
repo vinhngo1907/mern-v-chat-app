@@ -37,6 +37,7 @@ export const getConversations = ({ page, auth }) => async (dispatch) => {
 }
 
 export const addMessage = ({ msg, auth, socket }) => async (dispatch) => {
+    // dispatch({type: MESSAGE_TYPES.ADD_MESSAGE, payload: msg})
     const { _id, avatar, username, fullname } = auth.user;
     const newMess = { ...msg, user: { _id, avatar, username, fullname } }
     socket.emit('addMessage', { ...newMess });
