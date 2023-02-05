@@ -40,8 +40,6 @@ const LoginPass = () => {
 				</div>
 			</div>
 			<button type="submit" className="btn btn-dark w-100" disabled={(account && password) ? false : true}>Submit</button>
-
-
 		</form>
 	)
 }

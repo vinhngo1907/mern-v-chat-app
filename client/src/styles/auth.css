@@ -1,11 +1,11 @@
 .auth_page {
     width: 100%;
-    min-height: 100vh;
+    padding: 2.5rem 0;
     background: #fdfdfd;
     display: flex;
-    align-items: center;
     justify-content: center;
 }
+
 
 .auth_page .auth_box {
     background: #fff;
@@ -15,7 +15,7 @@
     padding: 2.7rem 1.7rem;
 }
 
-.auth_page form {
+.auth_page .register_form {
     background: #fff;
     max-width: 400px;
     width: 100%;
@@ -34,4 +34,54 @@
     transform: translateY(-50%);
     cursor: pointer;
     opacity: 0.5;
+}
+
+/* ---------- Facebook / Google ---------------- */
+.auth_page .auth_box .hr {
+    margin: 15px 0;
+    color: crimson;
+}
+
+.auth_page .auth_box .social button {
+    width: 100%;
+    margin: 10px 0;
+    height: 50px;
+    font-size: 14px;
+    font-weight: 200;
+    /* text-transform: capitalize; */
+    letter-spacing: 1.3px;
+    box-shadow: 0 2px 4px #777;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.auth_page .auth_box .social #fb-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    color: rgba(0, 0, 0, 0.54);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 1px 0px;
+    padding: 0px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Roboto, sans-serif;
+}
+
+.auth_page .auth_box .social #fb-login img {
+    width: 30px;
+    height: 30px;
+    border: none;
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+}
+
+.auth_page .auth_box .social #fb-login span {
+    margin-left: 58px;
 }

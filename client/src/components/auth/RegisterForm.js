@@ -1,98 +1,112 @@
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import { Link } from 'react-router-dom'
-import { useContext, useState } from 'react'
-import { AuthContext } from '../../contexts/AuthContext'
-import AlertMessage from '../layout/AlertMessage'
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../../redux/actions/authAction';
 
 const RegisterForm = () => {
-	// Context
-	const { registerUser } = useContext(AuthContext)
+	const { alert } = useSelector(state => state);
+	const initialState = {
+		username: "",
+		email: "",
+		fullname: "",
+		gender: "male",
+		password: "",
+		cf_password: ""
+	}
+	const [userData, setUserData] = useState(initialState);
+	const { username, fullname, email, cf_password, password } = userData;
 
-	// Local state
-	const [registerForm, setRegisterForm] = useState({
-		username: '',
-		password: '',
-		confirmPassword: ''
-	})
+	const handleChangeInput = (e) => {
+		setUserData({ ...userData, [e.target.name]: e.target.value })
+	}
 
-	const [alert, setAlert] = useState(null)
+	const [typePass, setTypePass] = useState(false);
+	const [typeCfPass, setTypeCfPass] = useState(false);
 
-	const { username, password, confirmPassword } = registerForm
-
-	const onChangeRegisterForm = event =>
-		setRegisterForm({
-			...registerForm,
-			[event.target.name]: event.target.value
-		})
-
-	const register = async event => {
-		event.preventDefault()
-
-		if (password !== confirmPassword) {
-			setAlert({ type: 'danger', message: 'Passwords do not match' })
-			setTimeout(() => setAlert(null), 5000)
-			return
-		}
-
-		try {
-			const registerData = await registerUser(registerForm)
-			if (!registerData.success) {
-				setAlert({ type: 'danger', message: registerData.message })
-				setTimeout(() => setAlert(null), 5000)
-			}
-		} catch (error) {
-			console.log(error)
-		}
+	const dispatch = useDispatch();
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		dispatch(register(userData))
 	}
 
 	return (
 		<>
-			<Form className='my-4' onSubmit={register}>
-				<AlertMessage info={alert} />
+			<form onSubmit={handleSubmit}>
+				<div className="form-group">
+					<label htmlFor="email">Email</label>
+					<input type="text" className="form-control" id="email" name="email" value={email} onChange={handleChangeInput}
+						style={{ background: `${alert.email ? '#fd2d6a14' : ''}` }}
+					/>
+					<small className="form-text text-danger">
+						{alert.email ? alert.email : ''}
+					</small>
+				</div>
+				<div className="form-group">
+					<label htmlFor="username">Username</label>
+					<input
+						type="text" className="form-control" id="username" name="username" value={username} onChange={handleChangeInput}
+						style={{ background: `${alert.username ? '#fd2d6a14' : ''}` }}
+					/>
+					<small className="form-text text-danger">
+						{alert.username ? alert.username : ''}
+					</small>
+				</div>
+				<div className="form-group">
+					<label htmlFor="fullname">Fullname</label>
+					<input
+						type="text" className="form-control" id="fullname" name="fullname" value={fullname} onChange={handleChangeInput}
+						style={{ background: `${alert.fullname ? '#fd2d6a14' : ''}` }}
+					/>
+					<small className="form-text text-danger">
+						{alert.fullname ? alert.fullname : ''}
+					</small>
+				</div>
+				<div className="form-group">
+					<label htmlFor="password">Password</label>
+					<div className="pass">
+						<input type={typePass ? "text" : "password"} className="form-control" id="password" value={password}
+							name="password" onChange={handleChangeInput}
+							style={{ background: `${alert.password ? '#fd2d6a14' : ''}` }}
+						/>
+						<small onClick={() => setTypePass(!typePass)}>{typePass ? 'hide' : 'show'}</small>
+					</div>
+					<small className="form-text text-danger">
+						{alert.password ? alert.password : ''}
+					</small>
+				</div>
+				<div className="form-group">
+					<label htmlFor="cf_password">Confirm Password</label>
+					<div className="pass">
+						<input type={typeCfPass ? "text" : "password"}
+							className="form-control" onChange={handleChangeInput}
+							id="cf_password"
+							name="cf_password"
+							value={cf_password} style={{ background: `${alert.cf_password ? '#fd2d6a14' : ''}` }}
+						/>
+						<small onClick={() => setTypeCfPass(!typeCfPass)}>{typeCfPass ? 'hide' : 'show'}</small>
+					</div>
+					<small className="form-text text-danger">
+						{alert.cf_password ? alert.cf_password : ''}
+					</small>
+				</div>
+				<div className="row justify-content-between mx-0 mb-1">
+					<label htmlFor="male">
+						Male: <input type="radio" id="male" name="gender"
+							value="male" defaultChecked onChange={handleChangeInput} />
+					</label>
 
-				<Form.Group>
-					<Form.Control
-						type='text'
-						placeholder='Username'
-						name='username'
-						required
-						value={username}
-						onChange={onChangeRegisterForm}
-					/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Control
-						type='password'
-						placeholder='Password'
-						name='password'
-						required
-						value={password}
-						onChange={onChangeRegisterForm}
-					/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Control
-						type='password'
-						placeholder='Confirm Password'
-						name='confirmPassword'
-						required
-						value={confirmPassword}
-						onChange={onChangeRegisterForm}
-					/>
-				</Form.Group>
-				<Button variant='success' type='submit'>
-					Register
-				</Button>
-			</Form>
-			<p>
-				Already have an account?
-				<Link to='/login'>
-					<Button variant='info' size='sm' className='ml-2'>
-						Login
-					</Button>
-				</Link>
-			</p>
+					<label htmlFor="female">
+						Female: <input type="radio" id="female" name="gender"
+							value="female" onChange={handleChangeInput} />
+					</label>
+
+					<label htmlFor="other">
+						Other: <input type="radio" id="other" name="gender"
+							value="other" onChange={handleChangeInput} />
+					</label>
+				</div>
+				<button type="submit" className="btn btn-dark w-100">Submit</button>
+
+			</form>
 		</>
 	)
 }
