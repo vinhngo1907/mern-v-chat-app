@@ -60,10 +60,10 @@ const MsgDisplay = ({ user, msg, theme, data }) => {
                                 filter: theme ? 'invert(1)' : 'invert(0)'
                             }}
                         >
-                            {
+                           {
                                 msg.call.times === 0
-                                    ? msg.call.video ? 'videocam_off' : 'phone_disabled'
-                                    : msg.call.video ? 'video_camera_front' : 'all'
+                                ? msg.call.video ? 'videocam_off' : 'phone_disabled'
+                                : msg.call.video ? 'video_camera_front' : 'call'
                             }
                         </span>
                         <div className="text-left">
@@ -71,7 +71,7 @@ const MsgDisplay = ({ user, msg, theme, data }) => {
                             <small>
                                 {
                                     msg.call.times > 0
-                                        ? <Times />
+                                        ? <Times total={msg.call.times}/>
                                         : new Date(msg.createdAt).toLocaleTimeString()
                                 }
                             </small>
