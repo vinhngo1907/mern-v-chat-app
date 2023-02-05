@@ -87,7 +87,26 @@ const CallModal = () => {
     // Disconnect
     useEffect(() => {
         socket.on('callerDisconnect')
-    }, [socket, answer, dispatch, call, addCallMessage, tracks, total, newCall])
+    }, [socket, answer, dispatch, call, addCallMessage, tracks, total, newCall]);
+
+    // play - pause audio
+    const playAudio = (newAudio) => {
+        newAudio.play();
+    }
+    const pauseAudio = (newAudio) => {
+        newAudio.pause();
+        newAudio.currentTime = 0;
+    }
+    useEffect(() => {
+        let newAudio = new Audio(RingRing);
+        if (answer) {
+            pauseAudio(newAudio);
+        } else {
+            playAudio(newAudio)
+        }
+
+        return () => pauseAudio(newAudio);
+    }, [answer])
     return (
         <div className="call_modal">
             <div className="call_box" >
