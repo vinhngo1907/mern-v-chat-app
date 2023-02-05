@@ -90,7 +90,7 @@ const SocketClient = () => {
         });
 
         return () => socket.off('userBusy');
-    }, [socket, dispatch]);
+    }, [socket, dispatch, call]);
 
     return (
         <>
