@@ -64,17 +64,15 @@
     background-color: rgb(255, 255, 255);
     color: rgba(0, 0, 0, 0.54);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 1px 0px;
-    padding: 0px;
+    /* padding: 0px;
     border-radius: 2px;
     border: 1px solid transparent;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: Roboto, sans-serif;
+   */
 }
 
 .auth_page .auth_box .social #fb-login img {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     border: none;
     position: absolute;
     top: 50%;
@@ -83,5 +81,9 @@
 }
 
 .auth_page .auth_box .social #fb-login span {
-    margin-left: 58px;
+    margin-left: 42px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 15px;
 }

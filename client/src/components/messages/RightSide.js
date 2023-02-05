@@ -13,7 +13,7 @@ import moment from "moment";
 import LoadIcon from '../../assets/loading.gif'
 
 const RightSide = () => {
-    const { auth, theme, message, socket } = useSelector(state => state);
+    const { auth, theme, message, socket, peer } = useSelector(state => state);
     const dispatch = useDispatch();
     const history = useHistory();
     const [user, setUser] = useState([]);
@@ -143,9 +143,39 @@ const RightSide = () => {
                 setIsLoadMore(1)
             }
         }
-        // eslint-disable-next-line
     }, [isLoadMore])
 
+    // Call
+    const caller = ({ video }) => {
+        const { _id, avatar, username, fullname } = user;
+        const msg = {
+            sender: auth.user._id,
+            recipient: _id,
+            avatar, username, fullname
+        }
+        dispatch({ type: GLOBALTYPES.CALL, payload: msg })
+    }
+
+    const callUser = ({ video }) => {
+        const { _id, avatar, username, fullname } = auth.user;
+        const msg = {
+            sender: _id,
+            recipient: user._id,
+            avatar, username, fullname
+        }
+        if (peer.open) msg.peerId = peer._id
+        socket.emit('callUser', msg);
+    }
+
+    const handleAudioCall = () => {
+        caller({ video: true });
+        callUser({ video: true });
+    }
+
+    const handleVideoCall = () => {
+        caller({ video: true });
+        callUser({ video: true });
+    }
 
     return (
         <>
@@ -155,9 +185,9 @@ const RightSide = () => {
                     user.length !== 0 &&
                     <UserCard user={user}>
                         <div className="message_tool">
-                            <i className="fas fa-phone-alt text-primary mr-3" />
+                            <i className="fas fa-phone-alt text-primary mr-3" onClick={handleAudioCall} />
 
-                            <i className="fas fa-video text-success mr-3" />
+                            <i className="fas fa-video text-success mr-3" onClick={handleVideoCall} />
 
                             <i className="fas fa-trash text-danger mr-3"
                                 onClick={handleDeleteCV}
