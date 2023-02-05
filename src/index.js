@@ -12,6 +12,7 @@ const { defaultSocket } = require("./socket-routers/index.routing");
 const { userSocket } = require("./socket-routers/user-socket.routing");
 const { messageSocket } = require("./socket-routers/message-socket.routing");
 const { callSocket } = require("./socket-routers/call-socket.routing");
+const { ExpressPeerServer } = require('peer');
 
 // connect DB
 connectDB();
@@ -37,6 +38,7 @@ app.use(
 app.use(
     !isProduction ? morgan('combined', { stream: accessLogStream, }) : morgan("dev")
 );
+
 // Routes
 require("./routes/index.routing")(app);
 
@@ -63,6 +65,8 @@ const onConnection = async (socket) => {
 
 io.on("connection", onConnection);
 
+// Create peer server
+ExpressPeerServer(http, { path: '/' })
 
 if (isProduction) {
     app.use(express.static("client/build"));
@@ -70,6 +74,7 @@ if (isProduction) {
         res.sendFile(path.join(__dirname, "client", "build", "index.html"))
     });
 }
+
 
 const PORT = process.env.PORT || 5000;
 

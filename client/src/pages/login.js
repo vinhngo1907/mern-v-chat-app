@@ -19,14 +19,20 @@ const Login = () => {
             <div className="auth_box">
                 <h3 className="text-uppercase text-center mb-4">V Chat App</h3>
                 <LoginPass />
-                <SocialLogin />
-                <small className="row my-2 text-primary" style={{ cursor: 'pointer' }}>
-                    <span className="col-6">
-                        <Link to='/forgot-password'>
-                            Forgot password?
-                        </Link>
-                    </span>
-                </small>
+                <div className="hr">Or Login With</div>
+
+                <div className="social">
+                    <SocialLogin />
+                </div>
+                <div className="my-2">
+                    <small className="row my-2 text-primary" style={{ cursor: 'pointer' }}>
+                        <span className="col-6">
+                            <Link to='/forgot-password'>
+                                Forgot password?
+                            </Link>
+                        </span>
+                    </small>
+                </div>
                 <p className="my-2">
                     Have not an account? <Link to="/register" style={{ color: "crimson" }}>Register Now</Link>
                 </p>

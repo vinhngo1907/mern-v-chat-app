@@ -5,7 +5,7 @@ import audiobell from './audio/got-it-done-613.mp3'
 import { GLOBALTYPES } from './redux/actions/globalTypes';
 
 const SocketClient = () => {
-    const { auth, socket, online } = useSelector(state => state);
+    const { auth, socket, online, call } = useSelector(state => state);
     const dispatch = useDispatch();
     const audioRef = useRef();
 
@@ -79,9 +79,19 @@ const SocketClient = () => {
     // Call user
     useEffect(() => {
         socket.on('callUserToClient', data => {
-            console.log(data);
-        })
+            dispatch({ type: GLOBALTYPES.CALL, payload: data });
+        });
+        return () => socket.off('callUserToClient')
     }, [socket, dispatch]);
+
+    useEffect(() => {
+        socket.on('userBusy', (data) => {
+            dispatch({ type: GLOBALTYPES.ALERT, pyaload: { error: `${call.username} is busy!!` } })
+        });
+
+        return () => socket.off('userBusy');
+    }, [socket, dispatch]);
+
     return (
         <>
             <audio controls ref={audioRef} style={{ display: 'none' }}>
