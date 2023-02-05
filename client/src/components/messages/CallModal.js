@@ -34,7 +34,6 @@ const CallModal = () => {
 
     useEffect(() => {
         setSecond(total % 60);
-        console.log({ total, second });
         setMins(parseInt(total / 60));
         setHours(parseInt(total / 3600));
     }, [total])
@@ -53,7 +52,7 @@ const CallModal = () => {
             dispatch(addMessage({ msg, auth, socket }))
         }
 
-    }, [auth, dispatch, socket, call]);
+    }, [auth, dispatch, socket]);
 
     const handleEndCall = () => {
         tracks && tracks.forEach(track => track.stop());

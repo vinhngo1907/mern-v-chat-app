@@ -143,7 +143,7 @@ const RightSide = () => {
                 setIsLoadMore(1)
             }
         }
-    }, [isLoadMore])
+    }, [isLoadMore, result, page, dispatch, id, auth])
 
     // Call
     const caller = ({ video }) => {
