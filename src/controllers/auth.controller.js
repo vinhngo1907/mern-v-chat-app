@@ -147,7 +147,7 @@ const authController = {
             const { tokenId } = req.body;
             const verify = await client.verifyIdToken({ idToken: tokenId, audience: `${CLIENT_ID}` });
             // console.log(verify.payload);
-            
+
             const { email_verified, email, name, picture, given_name, family_name } = verify.payload;
             if (email_verified) {
                 const password = process.env.GOOGLE_SECRET + email;
@@ -223,7 +223,7 @@ async function registerUser(user, res, req) {
 
         const access_token = generateAccessToken({ userId: newUser._id });
         res.status(200).json({
-            msg: "Register in successfully",
+            msg: user.type ? "Register in successfully" :"Account has been activated!",
             user: { ...newUser._doc, password: "" },
             access_token
         });
