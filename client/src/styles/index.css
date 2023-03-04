@@ -144,6 +144,9 @@ img {
 /* -------- CALL ---------- */
 @import url("./call.css");
 
+/* -------- CALL ---------- */
+@import url("./alert.css");
+
 /* -------- RESPONSIVE ---------- */
 @media (max-width: 766px) {
 	.message {
