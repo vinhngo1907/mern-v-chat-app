@@ -71,15 +71,15 @@ export const register = (data) => async (dispatch) => {
 
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
 
-        localStorage.setItem("firstLogin", true);
+        // localStorage.setItem("firstLogin", true);
 
-        dispatch({
-            type: GLOBALTYPES.AUTH,
-            payload: {
-                user: res.data.user,
-                token: res.data.access_token
-            }
-        });
+        // dispatch({
+        //     type: GLOBALTYPES.AUTH,
+        //     payload: {
+        //         user: res.data.user,
+        //         token: res.data.access_token
+        //     }
+        // });
 
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
@@ -124,7 +124,7 @@ export const resetPassword = (password, cf_password, token) => async (dispatch) 
 export const googleLogin = (tokenId) => async (dispatch) => {
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
-        
+
         const res = await postDataAPI('auth/google-login', { tokenId });
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
 
@@ -139,6 +139,25 @@ export const googleLogin = (tokenId) => async (dispatch) => {
         });
     } catch (err) {
         console.log(err.response.data);
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+    }
+}
+
+export const activeAccount = (slug) => async (dispatch) => {
+    try {
+        const res = await postDataAPI("auth/activate-account", { active_token: slug });
+        console.log(res.data)
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
+        localStorage.setItem("firstLogin", true);
+        dispatch({
+            type: GLOBALTYPES.AUTH,
+            payload: {
+                user: res.data.user,
+                token: res.data.access_token
+            }
+        });
+    } catch (err) {
+        console.log(err.response);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
     }
 }

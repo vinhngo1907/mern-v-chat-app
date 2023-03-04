@@ -54,7 +54,7 @@ const authController = {
             }
             const active_token = generateActiveToken(newUser);
 
-            sendMail(email, `${CLIENT_URL}/${active_token}`, "Verify your email address");
+            sendMail(email, `${CLIENT_URL}/active/${active_token}`, "Verify your email address");
             res.status(200).json({ msg: "Register Success! Please check email." });
 
         } catch (error) {

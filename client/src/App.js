@@ -17,6 +17,7 @@ import CallModal from './components/messages/CallModal'
 import Peer from 'peerjs'
 import ForgotPassword from "./pages/forgot-password";
 import ResetPasword from "./pages/reset-password/[id]";
+import Active from "./pages/active/[id]";
 
 function App() {
 	const { auth, status, modal, call } = useSelector(state => state);
@@ -52,6 +53,7 @@ function App() {
 						<Route exact path="/register" component={Register} />
 						<Route exact path="/forgot-password" component={ForgotPassword} />
 						<Route exact path="/reset-password/:id" component={ResetPasword} />
+						<Route exact path="/active/:id" component={Active} />
 						<PrivateRouter exact path="/:page" component={PageRender} />
 						<PrivateRouter exact path="/:page/:id" component={PageRender} />
 					</Switch>
