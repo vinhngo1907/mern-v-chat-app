@@ -20,6 +20,7 @@
         "googleapis": "^109.0.1",
         "helmet": "^6.0.0",
         "jsonwebtoken": "^8.5.1",
+        "moment-timezone": "^0.5.41",
         "mongoose": "^5.12.2",
         "morgan": "^1.10.0",
         "node-fetch": "^3.3.0",

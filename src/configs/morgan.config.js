@@ -1,17 +1,27 @@
 const rfs = require("rotating-file-stream");
 const path = require("path");
-// const morgan = require("morgan");
+const moment = require('moment-timezone');
+const fs = require("fs");
 
-const accessLogStream = rfs.createStream('access.log', {
+const currentDate = () => {
+    const format = 'MMM-DD-YYYY HH:mm:ss';
+    const timezone = 'Asia/Ho_Chi_Minh';
+    
+    const now = moment().tz(timezone).format(format);
+    return now;
+}
+
+const accessLogStream = rfs.createStream(`access.log`, {
     interval: '1d', // rotate daily
     path: path.join('./src/', 'logs/access'),
 });
 
-const errorLogStream = rfs.createStream('error.log', {
+const errorLogStream = rfs.createStream(`error.log`, {
     interval: '1d', // rotate daily
     path: path.join('./src/', 'logs/error'),
 });
 
+// const errorsLog = fs.createWriteStream(path.join('./src/', 'error.log'), { flags: 'a' });
 // morgan.token('error', (req, res) => `${req.error.message} - ${req.error.stack}`);
 
 const getCustomErrorMorganFormat = () => JSON.stringify({

@@ -1,5 +1,8 @@
 const nodemailer = require("nodemailer");
-const { OAuth2Client } = require("google-auth-library");
+// const { OAuth2Client } = require("google-auth-library");
+const {google} = require('googleapis')
+const {OAuth2} = google.auth;
+
 const OAUTH_PLAYGROUND = "https://developers.google.com/oauthplayground";
 
 const CLIENT_ID = process.env.MAIL_CLIENT_ID;
@@ -9,8 +12,8 @@ const SENDER_MAIL = process.env.SENDER_EMAIL_ADDRESS;
 const CLIENT_URL = process.env.CLIENT_URL;
 
 const sendMail = async (to, url, txt) => {
-    const oAuth2Client = new OAuth2Client(
-        CLIENT_ID, CLIENT_SECRET, OAUTH_PLAYGROUND
+    const oAuth2Client = new OAuth2(
+        CLIENT_ID, CLIENT_SECRET,REFRESH_TOKEN, OAUTH_PLAYGROUND
     );
     oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
     try {
@@ -38,6 +41,7 @@ const sendMail = async (to, url, txt) => {
         return result;
     } catch (error) {
         console.log(error);
+        return;
     }
 }
 

@@ -52,7 +52,7 @@ const messageController = {
             res.status(200).json({ msg: "Create success !", message: newMess });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            //req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -70,7 +70,7 @@ const messageController = {
             res.json({ messages, result: messages.length });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            //req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -107,7 +107,7 @@ const messageController = {
             res.json({ msg: "Updated message successfully", message: updatedMess });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            //req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -122,7 +122,7 @@ const messageController = {
             res.json({ msg: "Success", message: deletedMessage });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            //req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     }
