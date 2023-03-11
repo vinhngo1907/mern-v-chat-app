@@ -27,7 +27,7 @@ const authController = {
 
         } catch (error) {
             console.log(error);
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -59,7 +59,7 @@ const authController = {
 
         } catch (error) {
             console.log(error);
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -74,7 +74,7 @@ const authController = {
             registerUser(userData, res, req);
         } catch (error) {
             console.log(error);
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -94,7 +94,7 @@ const authController = {
             res.status(200).json({ msg: "Success, Please check email!" })
         } catch (error) {
             console.log(error);
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -129,7 +129,7 @@ const authController = {
 
         } catch (error) {
             console.log(error);
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -138,7 +138,7 @@ const authController = {
             res.clearCookie('rf_v_token', { path: '/api/auth/refresh-token' });
             return res.json({ msg: "Logout success" });
         } catch (error) {
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -170,7 +170,8 @@ const authController = {
                 return res.status(400).json({ msg: "Login failure, please try again!" })
             }
         } catch (error) {
-            req.error = error;
+            console.log(error);
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     }

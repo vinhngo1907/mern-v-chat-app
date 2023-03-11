@@ -26,7 +26,7 @@ const conversationController = {
             res.json({ msg: "Success", conversations, result: conversations.length });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            //req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -45,7 +45,7 @@ const conversationController = {
             res.status(200).json({ msg: "Deleted conversation successfully" });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            //req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     }

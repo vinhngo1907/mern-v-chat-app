@@ -20,7 +20,7 @@ const userController = {
             res.status(200).json({ msg: "Success", user });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -32,7 +32,7 @@ const userController = {
             res.status(200).json({ msg: "Success", user });
         } catch (error) {
             console.log(error);
-            req.error = error;
+            // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -56,7 +56,7 @@ const userController = {
             res.status(200).json({ msg: "Updated user successfully" });
         } catch (error) {
             console.log(error);
-            req.error = error;
+           // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -77,7 +77,7 @@ const userController = {
             res.status(200).json({ msg: "Update password successfully" });
         } catch (error) {
             console.log(error);
-            req.error = error;
+           // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -117,7 +117,7 @@ const userController = {
             })
         } catch (error) {
             console.log(error);
-            req.error = error;
+           // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     },
@@ -135,7 +135,7 @@ const userController = {
             res.status(200).json({ msg: "Reset password success" })
         } catch (error) {
             console.log(error);
-            req.error = error;
+           // req.error = error;
             return res.status(500).json({ msg: error.message });
         }
     }

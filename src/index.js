@@ -5,9 +5,8 @@ const connectDB = require("./configs/db.config");
 const cors = require('cors');
 const helmet = require("helmet");
 const morgan = require("morgan");
-const rfs = require("rotating-file-stream");
 const path = require("path");
-const { accessLogStream, errorLogStream, getCustomErrorMorganFormat } = require("./configs/morgan.config");
+const { accessLogStream, errorLogStream, getCustomErrorMorganFormat, errorsLog } = require("./configs/morgan.config");
 const { defaultSocket } = require("./socket-routers/index.routing");
 const { userSocket } = require("./socket-routers/user-socket.routing");
 const { messageSocket } = require("./socket-routers/message-socket.routing");
@@ -26,7 +25,8 @@ app.use(cookieParser());
 const isProduction = process.env.NODE_ENV === "production";
 
 // morgan - logger
-morgan.token('error', (req, res) => `${req?.error?.message || req?.error?.err} - ${req?.error?.stack}`);
+// morgan.token('error', (err, req, res, next) => `${req?.error?.message || req?.error?.err} - ${req?.error?.stack}`);
+morgan.token('error', (err, req, res, next) => `${err?.stack}`);
 
 app.use(
     morgan(getCustomErrorMorganFormat(), {
