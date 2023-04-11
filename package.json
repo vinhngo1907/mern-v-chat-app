@@ -10,11 +10,13 @@
         "server-install": "npm install",
         "client-install": "cd client && npm install",
         "install-all": "concurrently \"npm run server-install\" \"npm run client-install\" ",
-        "dev": "concurrently \"npm run server\" \"npm run client\" "
+        "dev": "concurrently \"npm run server\" \"npm run client\" ",
+        "render-postbuild": "cd client && npm install && npm run build"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "concurrently": "^6.0.0",
         "bcrypt": "^5.1.0",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
