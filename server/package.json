@@ -1,0 +1,40 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "server": "nodemon index.js",
+        "client": "cd client && npm run start",
+        "server-install": "npm install",
+        "client-install": "cd client && npm install",
+        "install-all": "concurrently \"npm run server-install\" \"npm run client-install\" ",
+        "dev": "concurrently \"npm run server\" \"npm run client\" "
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "google-auth-library": "^8.7.0",
+        "googleapis": "^109.0.1",
+        "helmet": "^6.0.0",
+        "jsonwebtoken": "^8.5.1",
+        "moment-timezone": "^0.5.41",
+        "mongoose": "^5.13.16",
+        "morgan": "^1.10.0",
+        "node-fetch": "^2.6.1",
+        "nodemailer": "^6.8.0",
+        "peer": "^0.6.1",
+        "rotating-file-stream": "^3.0.4",
+        "socket.io": "^4.5.4",
+        "twilio": "^3.83.3"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
+    }
+}
