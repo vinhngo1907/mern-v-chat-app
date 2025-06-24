@@ -34,7 +34,7 @@ const SocketClient = () => {
 
     useEffect(() => {
         socket.on('deleteMessageToClient', msg => {
-            dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: msg });
+            dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {newData: msg, _id: msg._id} });
         })
         return () => socket.off('deleteMessageToClient');
     }, [socket, dispatch]);
@@ -107,6 +107,20 @@ const SocketClient = () => {
         })
 
         return () => socket.off('removeNotifyToClient')
+    }, [socket, dispatch]);
+
+    useEffect(() => {
+        socket.on("deleteMessageToClient", (data) => {
+            const { msg, listMessages } = data;
+            dispatch({
+                type: MESSAGE_TYPES.DELETE_MESSAGE,
+                payload: {
+                    newData: listMessages,
+                    _id: msg.sender
+                }
+            });
+        });
+        return () => socket.off("deleteMessageToClient");
     }, [socket, dispatch]);
 
     return (

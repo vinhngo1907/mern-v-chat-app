@@ -67,7 +67,7 @@ export const getConversations = ({ page, auth }) => async (dispatch) => {
 
 export const addMessage = ({ msg, auth, socket }) => async (dispatch) => {
     const tempId = `temp-${uuidv4()}`; // temp ID
-console.log({tempId})
+    console.log({ tempId })
     const tempMsg = {
         ...msg,
         _id: tempId,
@@ -83,7 +83,7 @@ console.log({tempId})
     // Display immediately in UI
     dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: tempMsg });
     socket.emit('addMessage', tempMsg);
-
+    // return
     try {
         const res = await postDataAPI('message', msg, auth.token);
         const savedMsg = res.data.message;
@@ -96,6 +96,7 @@ console.log({tempId})
                 savedMsg
             }
         });
+        console.log({ savedMsg, tempId })
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,
@@ -153,8 +154,10 @@ export const editMessage = ({ id, msg, auth, data, socket }) => async (dispatch)
 //     }
 // }
 
-export const deleteMessage = ({ msg, auth, socket }) => async (dispatch) => {
+export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) => {
     // If new message has temp ID
+    console.log({ msg })
+    console.log(">>>>>", msg._id?.startsWith('temp-'))
     if (msg._id?.startsWith('temp-')) {
         dispatch({ type: MESSAGE_TYPES.MARK_TEMP_MESSAGE_DELETED, payload: { tempId: msg._id } });
         dispatch({ type: MESSAGE_TYPES.DELETE_TEMP_MESSAGE, payload: { tempId: msg._id } });
@@ -166,14 +169,22 @@ export const deleteMessage = ({ msg, auth, socket }) => async (dispatch) => {
 
         return;
     }
-
+    console.log("[>>>CO _ID NE<<<]", msg._id);
+    const newData = deleteData(data, msg._id)
+    dispatch({
+        type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {
+            _id: msg.recipient,
+            newData
+        }
+    });
+    socket.emit('deleteMessage', {
+        msg, listMessages: newData
+    });
     try {
-        dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: { _id: msg._id } });
-        socket.emit('deleteMessage', { _id: msg._id });
         await deleteDataAPI(`message/${msg._id}`, auth.token);
     } catch (err) {
-        console.log(err);
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
+        console.log("ERROR: ", err);
+        // dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
     }
 }
 
