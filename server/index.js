@@ -48,6 +48,8 @@ app.use(cors({
     credentials: true
 }));
 
+app.options('*', cors());
+
 // app.use(cors({
 //   origin: ["http://localhost:3000"], // Add other allowed origins if needed
 //   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
