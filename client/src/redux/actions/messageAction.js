@@ -1,6 +1,7 @@
 import { deleteData, editData, GLOBALTYPES } from "./globalTypes";
 import { deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from "../../utils/fetchData";
 import { createNotify } from "./notifyAction";
+import { v4 as uuidv4 } from 'uuid';
 
 export const MESSAGE_TYPES = {
     ADD_USER: "ADD_USER",
@@ -11,6 +12,9 @@ export const MESSAGE_TYPES = {
     DELETE_MESSAGE: "DELETE_MESSAGE",
     EDIT_MESSAGE: "EDIT_MESSAGE",
     DELETE_CV: "DELETE_CV",
+    UPDATE_MESSAGE_ID: "UPDATE_MESSAGE_ID",
+    DELETE_TEMP_MESSAGE: "DELETE_TEMP_MESSAGE",
+    MARK_TEMP_MESSAGE_DELETED: "MARK_TEMP_MESSAGE_DELETED"
 }
 
 export const getConversations = ({ page, auth }) => async (dispatch) => {
@@ -37,29 +41,68 @@ export const getConversations = ({ page, auth }) => async (dispatch) => {
     }
 }
 
+// export const addMessage = ({ msg, auth, socket }) => async (dispatch) => {
+//     // dispatch({type: MESSAGE_TYPES.ADD_MESSAGE, payload: msg})
+//     const { _id, avatar, username, fullname } = auth.user;
+//     const newMess = { ...msg, user: { _id, avatar, username, fullname } }
+//     socket.emit('addMessage', { ...newMess });
+//     try {
+//         const res = await postDataAPI('message', msg, auth.token);
+//         // Notify
+//         const notify = {
+//             id: res.data.message._id,
+//             text: msg.text,
+//             recipients: [msg.recipient],
+//             url: `/messages/${msg.sender}`,
+//             content: msg.text ? 'mentioned you in a message.' : 'has media or/and contact on your mess.',
+//             image: auth.user.avatar
+//         }
+
+//         dispatch(createNotify({ msg: notify, auth, socket }))
+//         dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: { ...msg, _id: res.data.message._id } });
+//     } catch (err) {
+//         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
+//     }
+// }
+
 export const addMessage = ({ msg, auth, socket }) => async (dispatch) => {
-    // dispatch({type: MESSAGE_TYPES.ADD_MESSAGE, payload: msg})
-    const { _id, avatar, username, fullname } = auth.user;
-    const newMess = { ...msg, user: { _id, avatar, username, fullname } }
-    socket.emit('addMessage', { ...newMess });
+    const tempId = `temp-${uuidv4()}`; // temp ID
+console.log({tempId})
+    const tempMsg = {
+        ...msg,
+        _id: tempId,
+        user: {
+            _id: auth.user._id,
+            avatar: auth.user.avatar,
+            username: auth.user.username,
+            fullname: auth.user.fullname
+        },
+        createdAt: new Date().toISOString()
+    };
+
+    // Display immediately in UI
+    dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: tempMsg });
+    socket.emit('addMessage', tempMsg);
+
     try {
         const res = await postDataAPI('message', msg, auth.token);
-        // Notify
-        const notify = {
-            id: res.data.message._id,
-            text: msg.text,
-            recipients: [msg.recipient],
-            url: `/messages/${msg.sender}`,
-            content: msg.text ? 'mentioned you in a message.' : 'has media or/and contact on your mess.',
-            image: auth.user.avatar
-        }
+        const savedMsg = res.data.message;
 
-        dispatch(createNotify({ msg: notify, auth, socket }))
-        dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: { ...msg, _id: res.data.message._id } });
+        // Update message that had real _id
+        dispatch({
+            type: MESSAGE_TYPES.UPDATE_MESSAGE_ID,
+            payload: {
+                tempId,
+                savedMsg
+            }
+        });
     } catch (err) {
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response?.data?.msg || err.message }
+        });
     }
-}
+};
 
 export const getMessages = ({ id, auth, page = 1 }) => async (dispatch) => {
     try {
@@ -98,11 +141,35 @@ export const editMessage = ({ id, msg, auth, data, socket }) => async (dispatch)
     }
 }
 
-export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) => {
-    const newData = deleteData(data, msg._id);
-    dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: { newData, _id: msg.recipient } });
-    socket.emit('deleteMessage', { newData, _id: msg.sender, recipient: msg.recipient });
+// export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) => {
+//     const newData = deleteData(data, msg._id);
+//     dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: { newData, _id: msg.recipient } });
+//     socket.emit('deleteMessage', { newData, _id: msg.sender, recipient: msg.recipient });
+//     try {
+//         await deleteDataAPI(`message/${msg._id}`, auth.token);
+//     } catch (err) {
+//         console.log(err);
+//         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
+//     }
+// }
+
+export const deleteMessage = ({ msg, auth, socket }) => async (dispatch) => {
+    // If new message has temp ID
+    if (msg._id?.startsWith('temp-')) {
+        dispatch({ type: MESSAGE_TYPES.MARK_TEMP_MESSAGE_DELETED, payload: { tempId: msg._id } });
+        dispatch({ type: MESSAGE_TYPES.DELETE_TEMP_MESSAGE, payload: { tempId: msg._id } });
+        try {
+            await postDataAPI('message/mark-temp-deleted', { tempId: msg._id }, auth.token);
+        } catch (err) {
+            console.error("Redis mark delete failed", err);
+        }
+
+        return;
+    }
+
     try {
+        dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: { _id: msg._id } });
+        socket.emit('deleteMessage', { _id: msg._id });
         await deleteDataAPI(`message/${msg._id}`, auth.token);
     } catch (err) {
         console.log(err);
