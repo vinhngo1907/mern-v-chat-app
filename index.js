@@ -13,7 +13,7 @@ const { accessLogStream, errorLogStream, getCustomErrorMorganFormat, errorsLog }
 // const { callSocket } = require("./src/socket-routers/call-socket.routing");
 // const { notifySocket } = require("./src/socket-routers/notify-socket.routing");
 const { ExpressPeerServer } = require('peer');
-const SocketServer = require('./src/SocketServer');
+const SocketServer = require('./src/socketServer');
 
 // connect DB
 connectDB();
