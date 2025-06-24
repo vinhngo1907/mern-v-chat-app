@@ -35,7 +35,7 @@ A real-time chat application built with the MERN stack (MongoDB, Express, React,
 
 ### 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/mern-v-chat-app.git
+git clone https://github.com/vinhngo1907/mern-v-chat-app.git
 cd mern-v-chat-app
 ```
 

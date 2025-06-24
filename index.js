@@ -7,12 +7,13 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const path = require("path");
 const { accessLogStream, errorLogStream, getCustomErrorMorganFormat, errorsLog } = require("./src/configs/morgan.config");
-const { defaultSocket } = require("./src/socket-routers/index.routing");
-const { userSocket } = require("./src/socket-routers/user-socket.routing");
-const { messageSocket } = require("./src/socket-routers/message-socket.routing");
-const { callSocket } = require("./src/socket-routers/call-socket.routing");
-const { notifySocket } = require("./src/socket-routers/notify-socket.routing");
+// const { defaultSocket } = require("./src/socket-routers/index.routing");
+// const { userSocket } = require("./src/socket-routers/user-socket.routing");
+// const { messageSocket } = require("./src/socket-routers/message-socket.routing");
+// const { callSocket } = require("./src/socket-routers/call-socket.routing");
+// const { notifySocket } = require("./src/socket-routers/notify-socket.routing");
 const { ExpressPeerServer } = require('peer');
+const SocketServer = require('./src/SocketServer');
 
 // connect DB
 connectDB();
@@ -52,28 +53,31 @@ require("./src/routes/index.routing")(app);
 let users = [];
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const onConnection = async (socket) => {
+// const onConnection = async (socket) => {
 
-    console.log("new connection");
+//     console.log("new connection");
 
-    // User join - online
-    userSocket(io, socket, users);
+//     // User join - online
+//     userSocket(io, socket, users);
 
-    // Message
-    messageSocket(io, socket, users);
+//     // Message
+//     messageSocket(io, socket, users);
 
-    // Call user
-    callSocket(io, socket, users);
+//     // Call user
+//     callSocket(io, socket, users);
 
-    // Notification
-    notifySocket(io, socket, users);
+//     // Notification
+//     notifySocket(io, socket, users);
 
-    // User disconnect - offline
-    defaultSocket(io, socket, users);
-}
+//     // User disconnect - offline
+//     defaultSocket(io, socket, users);
+// }
 
-io.on("connection", onConnection);
 
+// io.on("connection", onConnection);
+io.on("connection", socket => {
+    SocketServer(socket);
+});
 // Create peer server
 ExpressPeerServer(http, { path: '/' });
 
