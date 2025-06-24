@@ -159,7 +159,7 @@ const SocketServer = (socket) => {
 
     socket.on('endCall', data => {
         const client = users.find(user => user.id === data.sender)
-console.log({client})
+        console.log({ client })
         if (client) {
             socket.to(`${client.socketId}`).emit('endCallToClient', data)
             users = EditData(users, client.id, null)
@@ -173,6 +173,11 @@ console.log({client})
             }
         }
     })
+
+    socket.on("deleteMessage", (data) => {
+        const user = users.find(user => user.id === data.recipient);
+        user && socket.to(`${user.socketId}`).emit('deleteMessageToClient', data);
+    });
 }
 
 module.exports = SocketServer
