@@ -1,2 +1,2 @@
-/api/* https://mern-v-chat-server.onrender.com/api/:splat 200!
+/api/* mern-v-chat-app.onrender.com/api/:splat 200!
 /* /index.html 200
