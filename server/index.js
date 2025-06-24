@@ -32,8 +32,7 @@ app.use(helmet());
 
 const allowedOrigins = [
     'http://localhost:3000',
-    'http://localhost:5173',
-    'https://your-client.app'
+    'https://mern-v-chat-app.netlify.app'
 ];
 
 app.use(cors({
