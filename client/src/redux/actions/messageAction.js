@@ -1,6 +1,6 @@
 import { deleteData, editData, GLOBALTYPES } from "./globalTypes";
 import { deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from "../../utils/fetchData";
-import { createNotify } from "./notifyAction";
+// import { createNotify } from "./notifyAction";
 import { v4 as uuidv4 } from 'uuid';
 
 export const MESSAGE_TYPES = {
