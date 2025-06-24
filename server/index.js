@@ -18,8 +18,23 @@ const {
 // ================== INIT ==================
 const app = express();
 const server = http.createServer(app);
-const io = require("socket.io")(server);
 const isProduction = process.env.NODE_ENV === "production";
+
+// ================== CORS CONFIG ==================
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://mern-v-chat-app.netlify.app'
+];
+
+// ================== SOCKET.IO with CORS ==================
+const { Server } = require("socket.io");
+const io = new Server(server, {
+    cors: {
+        origin: allowedOrigins,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        credentials: true
+    }
+});
 
 // ================== DB CONNECT ==================
 connectDB();
@@ -30,14 +45,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
 
-const allowedOrigins = [
-    'http://localhost:3000',
-    'https://mern-v-chat-app.netlify.app'
-];
-
 app.use(cors({
-    origin: (origin, callback) => {
-        // Cho phép requests từ các origin hợp lệ hoặc từ công cụ nội bộ (Postman, curl không có origin)
+    origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -49,16 +58,9 @@ app.use(cors({
 }));
 
 app.options('*', cors());
-
-// app.use(cors({
-//   origin: ["http://localhost:3000"], // Add other allowed origins if needed
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   credentials: true
-// }));
-
 app.use(express.static("public"));
 
-// Morgan logging
+// ================== LOGGING ==================
 morgan.token('error', (err) => `${err?.stack || ''}`);
 app.use(morgan(getCustomErrorMorganFormat(), {
     skip: (req, res) => res.statusCode < 400,
@@ -72,13 +74,13 @@ require("./src/routes/index.routing")(app);
 // ================== SOCKET ==================
 let users = [];
 io.on("connection", (socket) => {
-    SocketServer(socket, io, users); // Modified to allow passing `io` if needed
+    SocketServer(socket, io, users); // Pass io if needed
 });
 
-// ================== PEER SERVER ==================
+// ================== PEER ==================
 ExpressPeerServer(server, { path: '/' });
 
-// ================== CLIENT PRODUCTION ==================
+// ================== CLIENT STATIC (React build) ==================
 if (isProduction) {
     app.use(express.static(path.join(__dirname, '../client/build')));
     app.get('*', (req, res) => {
@@ -86,6 +88,6 @@ if (isProduction) {
     });
 }
 
-// ================== START SERVER ==================
+// ================== START ==================
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`✅ Server started on port ${PORT}`));
