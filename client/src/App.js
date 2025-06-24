@@ -26,8 +26,8 @@ function App() {
 
 	useEffect(() => {
 		dispatch(refreshToken())
-		// const socket = io('https://mern-v-chat-app.onrender.com');
-		const socket = io();
+		const socket = io('https://mern-v-chat-app.onrender.com');
+		// const socket = io();
 		dispatch({ type: GLOBALTYPES.SOCKET, payload: socket });
 		return () => socket.close()
 
