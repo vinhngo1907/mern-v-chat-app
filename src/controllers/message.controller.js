@@ -2,6 +2,7 @@ const messageModel = require("../models/message.model");
 const conversationModel = require("../models/conversation.model");
 const userModel = require("../models/user.model");
 const APIFeautres = require("../utils/lib.util");
+const redisClient = require('../configs/redis.config');
 
 // class APIFeautres {
 //     constructor(query, queryStr) {
@@ -20,7 +21,14 @@ const APIFeautres = require("../utils/lib.util");
 const messageController = {
     createMessage: async (req, res) => {
         try {
-            const { sender, recipient, text, call, media } = req.body;
+            const { sender, recipient, text, call, media, tempId } = req.body;
+            if (tempId) {
+                const isDeleted = await redisClient.get(`deleted-temp:${tempId}`);
+                if (isDeleted) {
+                    return res.json({ msg: 'Message was deleted before saving.' });
+                }
+            }
+
             if(!recipient || (!text.trim() && media.length === 0 && !call)) return;
 
             const users = await userModel.find({ _id: recipient, followers: sender });
@@ -49,6 +57,8 @@ const messageController = {
             });
 
             await newMess.save();
+
+            if (tempId) await redisClient.del(`deleted-temp:${tempId}`);
 
             res.status(200).json({ msg: "Create success !", message: newMess });
         } catch (error) {
