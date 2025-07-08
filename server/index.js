@@ -87,12 +87,12 @@ io.on("connection", (socket) => {
 ExpressPeerServer(server, { path: '/' });
 
 // ================== CLIENT STATIC (React build) ==================
-if (isProduction) {
-    app.use(express.static(path.join(__dirname, '../client/build')));
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/build/index.html'));
-    });
-}
+// if (isProduction) {
+//     app.use(express.static(path.join(__dirname, '../client/build')));
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(__dirname, '../client/build/index.html'));
+//     });
+// }
 
 // ================== START ==================
 const PORT = process.env.PORT || 5000;
