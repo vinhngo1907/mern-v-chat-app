@@ -14,7 +14,7 @@ export const login = (data) => async (dispatch) => {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } })
     } catch (err) {
         console.log(err);
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err?.response?.data?.msg || err?.message} });
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err?.response?.data?.msg || err?.message } });
     }
 }
 
@@ -33,16 +33,11 @@ export const refreshToken = () => async (dispatch) => {
                 }
             })
 
-            dispatch({ type: GLOBALTYPES.ALERT, payload: {} })
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
 
         } catch (err) {
             console.log(err);
-            dispatch({
-                type: GLOBALTYPES.ALERT,
-                payload: {
-                    error: err.response.data.msg
-                }
-            })
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err?.response?.data?.msg } });
         }
     }
 }
@@ -54,7 +49,7 @@ export const logout = () => async (dispatch) => {
         window.location.href = "/";
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
     } catch (err) {
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err?.response?.data?.msg } });
     }
 }
 
@@ -82,7 +77,7 @@ export const register = (data) => async (dispatch) => {
         // });
 
     } catch (err) {
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } })
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err?.response?.data?.msg } });
     }
 }
 
@@ -143,9 +138,9 @@ export const googleLogin = (tokenId) => async (dispatch) => {
     }
 }
 
-export const facebookLogin = (data) => async(dispatch)=>{
-    try{
-        const res =await postDataAPI("auth/facebook-login",{
+export const facebookLogin = (data) => async (dispatch) => {
+    try {
+        const res = await postDataAPI("auth/facebook-login", {
             ...data
         })
         dispatch({
@@ -155,7 +150,7 @@ export const facebookLogin = (data) => async(dispatch)=>{
                 token: res.data.access_token
             }
         });
-    }catch(err){
+    } catch (err) {
         console.log(err.response.data);
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
     }
