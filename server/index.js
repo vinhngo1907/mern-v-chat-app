@@ -14,6 +14,7 @@ const {
     errorLogStream,
     getCustomErrorMorganFormat
 } = require("./src/configs/morgan.config");
+const { clientUrl } = require('./src/utils/constants.util');
 
 // ================== INIT ==================
 const app = express();
@@ -21,19 +22,27 @@ const server = http.createServer(app);
 const isProduction = process.env.NODE_ENV === "production";
 
 // ================== CORS CONFIG ==================
-const allowedOrigins = [
-    'http://localhost:3000',
-    'https://mern-v-chat-app.netlify.app'
-];
+const allowedOrigins = [clientUrl];
+console.log('✅ Allowed Origins:', allowedOrigins);
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        // console.log('🌐 Incoming Origin:', origin);
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log(`❌ Origin ${origin} is NOT allowed by CORS`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true
+};
 
 // ================== SOCKET.IO with CORS ==================
 const { Server } = require("socket.io");
 const io = new Server(server, {
-    cors: {
-        origin: allowedOrigins,
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        credentials: true
-    }
+    cors: corsOptions
 });
 
 // ================== DB CONNECT ==================
@@ -43,21 +52,18 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(helmet());
 
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true
-}));
+// Helmet với COOP cho OAuth
+app.use(
+    helmet({
+        crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+    })
+);
 
-app.options('*', cors());
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
+
 app.use(express.static("public"));
 
 // ================== LOGGING ==================
@@ -74,7 +80,7 @@ require("./src/routes/index.routing")(app);
 // ================== SOCKET ==================
 let users = [];
 io.on("connection", (socket) => {
-    SocketServer(socket, io, users); // Pass io if needed
+    SocketServer(socket, io, users);
 });
 
 // ================== PEER ==================

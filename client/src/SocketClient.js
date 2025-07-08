@@ -33,8 +33,17 @@ const SocketClient = () => {
     }, [socket, dispatch]);
 
     useEffect(() => {
-        socket.on('deleteMessageToClient', msg => {
-            dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {newData: msg, _id: msg._id} });
+        socket.on('deleteMessageToClient', data => {
+            // console.log({ data });
+            // dispatch({ type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {newData: data, _id: data._id} });
+            dispatch({
+                type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {
+
+                    newData: data.listMessages,
+                    _id: data.msg.conversation 
+                }
+
+            });
         })
         return () => socket.off('deleteMessageToClient');
     }, [socket, dispatch]);

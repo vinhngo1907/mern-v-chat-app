@@ -14,7 +14,7 @@ export const login = (data) => async (dispatch) => {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } })
     } catch (err) {
         console.log(err);
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err?.response?.data?.msg || err?.message} });
     }
 }
 

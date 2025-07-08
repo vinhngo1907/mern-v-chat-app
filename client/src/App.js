@@ -19,7 +19,7 @@ import ForgotPassword from "./pages/forgot-password";
 import ResetPasword from "./pages/reset-password/[id]";
 import Active from "./pages/active/[id]";
 import { getNotifies } from './redux/actions/notifyAction';
-// import { apiUrl } from "./utils/constants";
+import { socketUrl } from "./utils/constants";
 
 function App() {
 	const { auth, status, modal, call } = useSelector(state => state);
@@ -27,8 +27,8 @@ function App() {
 
 	useEffect(() => {
 		dispatch(refreshToken())
-		const socket = io('https://mern-v-chat-app.onrender.com');
-		// const socket = io();
+		// const socket = io('https://mern-v-chat-app.onrender.com');
+		const socket = io(`${socketUrl}`);
 		dispatch({ type: GLOBALTYPES.SOCKET, payload: socket });
 		return () => socket.close()
 
