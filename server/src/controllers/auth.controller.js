@@ -101,7 +101,7 @@ const authController = {
     },
     refreshToken: async (req, res) => {
         try {
-            // console.log(req.cookies);
+            console.log(">>>>>",req.cookies);
             const rf_token = req.cookies.rf_v_token;
             if (!rf_token) {
                 req.error = { message: 'Please login now!' }
