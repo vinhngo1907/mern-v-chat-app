@@ -104,20 +104,19 @@ const SocketServer = (socket) => {
     socket.on('createNotify', msg => {
         const client = users.find(user => msg.recipients.includes(user.id))
         client && socket.to(`${client.socketId}`).emit('createNotifyToClient', msg)
-    })
+    });
 
     socket.on('removeNotify', msg => {
         const client = users.find(user => msg.recipients.includes(user.id))
         client && socket.to(`${client.socketId}`).emit('removeNotifyToClient', msg)
 
-    })
-
+    });
 
     // Message
     socket.on('addMessage', msg => {
         const user = users.find(user => user.id === msg.recipient)
         user && socket.to(`${user.socketId}`).emit('addMessageToClient', msg)
-    })
+    });
 
 
     // Check User Online / Offline
@@ -136,8 +135,7 @@ const SocketServer = (socket) => {
                 socket.to(`${client.socketId}`).emit('checkUserOnlineToClient', data._id)
             })
         }
-
-    })
+    });
 
 
     // Call User
@@ -155,7 +153,7 @@ const SocketServer = (socket) => {
                 socket.to(`${client.socketId}`).emit('callUserToClient', data)
             }
         }
-    })
+    });
 
     socket.on('endCall', data => {
         const client = users.find(user => user.id === data.sender)
@@ -172,10 +170,10 @@ const SocketServer = (socket) => {
                 users = EditData(users, client.call, null)
             }
         }
-    })
+    });
 
     socket.on("deleteMessage", (data) => {
-        const user = users.find(user => user.id === data.recipient);
+        const user = users.find(user => user.id === data.msg.recipient);
         user && socket.to(`${user.socketId}`).emit('deleteMessageToClient', data);
     });
 }

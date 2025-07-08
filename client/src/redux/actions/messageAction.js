@@ -184,7 +184,7 @@ export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) =
         await deleteDataAPI(`message/${msg._id}`, auth.token);
     } catch (err) {
         console.log("ERROR: ", err);
-        // dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg || err } })
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response?.data?.msg } })
     }
 }
 

@@ -4,38 +4,29 @@ const verifyToken = require('../middleware/auth.middleware');
 const messageCtrl = require('../controllers/message.controller');
 const redisClient = require('../configs/redis.config');
 
-/**
- * @route GET api/message
- * @desc Get messages
- * @access Private
- */
+// --- Protected Routes ---
 router.get('/:id', verifyToken, messageCtrl.getMessages);
-
-/**
- * @route POST api/message
- * @desc Create message
- * @access Private
- */
-
-router.post("/", verifyToken, messageCtrl.createMessage);
-
-
-/**
- * @route DELETE api/message
- * @desc Dlete messages
- * @access Private
- */
+router.post('/', verifyToken, messageCtrl.createMessage);
 router.delete('/:id', verifyToken, messageCtrl.deleteMessage);
 
-router.post("/mark-temp-deleted", async (req, res) => {
+// --- Mark temp deleted (public?) ---
+router.post('/mark-temp-deleted', async (req, res) => {
     const { tempId } = req.body;
-    if (!tempId) return res.status(400).json({ msg: 'Missing tempId' });
 
-    await redisClient.set(`deleted-temp:${tempId}`, 'true', {
-        EX: 60 * 5 // giữ trong Redis 5 phút
-    });
+    if (!tempId) {
+        return res.status(400).json({ msg: 'Missing tempId' });
+    }
 
-    res.status(200).json({ msg: 'Marked as deleted' });
+    try {
+        await redisClient.set(`deleted-temp:${tempId}`, 'true', {
+            EX: 60 * 5, // TTL 5 phút
+        });
+
+        res.status(200).json({ msg: 'Marked as deleted' });
+    } catch (err) {
+        console.error('Redis error:', err);
+        res.status(500).json({ msg: 'Internal server error' });
+    }
 });
 
-module.exports = router
+module.exports = router;

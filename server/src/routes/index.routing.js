@@ -5,11 +5,7 @@ const conversationRouter = require("./conversation.routing");
 const notificationRouter = require("./notify.routing");
 const baseURL = '/api';
 
-function createRouter(app) {
-    // app.use('/', (req, res) => {
-    //     console.log("Hello CodersX Tokyo");
-    //     res.status(200).send('Hello Word!');
-    // })
+function createRouter(app){ 
     app.use(baseURL + '/auth', authRouter);
     app.use(baseURL + '/user', userRouter);
     app.use(baseURL + '/message', messageRouter);

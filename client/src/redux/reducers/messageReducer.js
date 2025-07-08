@@ -63,11 +63,12 @@ const messageReducer = (state = initialState, action) => {
                 item._id === action.payload._id
                     ? { ...item, messages: action.payload.newData }
                     : item);
-            console.log({
-                ...state,
-                data: newData,
-                newData
-            })
+            console.log({newData})
+            // console.log({
+            //     ...state,
+            //     data: newData,
+            //     newData
+            // })
             return {
                 ...state,
                 data: newData
