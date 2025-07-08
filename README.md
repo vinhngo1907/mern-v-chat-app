@@ -11,15 +11,15 @@ A real-time chat application built with the MERN stack (MongoDB, Express, React,
 
 - [x] User authentication (JWT + Cookies)
 - [x] RESTful APIs with Express.js
-- [ ] Real-time messaging via WebSocket (Socket.io)
-- [ ] 1-on-1 private chat
+- [x] Real-time messaging via WebSocket (Socket.io)
+- [x] 1-on-1 private chat
 - [ ] Group chat support
-- [ ] Online/offline user status
+- [x] Online/offline user status
 - [ ] Typing indicators
 - [ ] Read receipts
-- [ ] File/media sharing
-- [ ] Push notifications
-- [ ] Dark mode UI
+- [x] File/media sharing
+- [x] Push notifications
+- [x] Dark mode UI
 
 ---
 
