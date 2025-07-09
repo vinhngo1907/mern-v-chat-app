@@ -2,6 +2,7 @@ import { deleteData, editData, GLOBALTYPES } from "./globalTypes";
 import { deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from "../../utils/fetchData";
 // import { createNotify } from "./notifyAction";
 import { v4 as uuidv4 } from 'uuid';
+import { imageDestroy } from "../../utils/imageUpload";
 
 export const MESSAGE_TYPES = {
     ADD_USER: "ADD_USER",
@@ -157,7 +158,7 @@ export const editMessage = ({ id, msg, auth, data, socket }) => async (dispatch)
 export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) => {
     // If new message has temp ID
     console.log({ msg })
-    console.log(">>>>>", msg._id?.startsWith('temp-'))
+    // console.log(">>>>>", msg._id?.startsWith('temp-'))
     if (msg._id?.startsWith('temp-')) {
         dispatch({ type: MESSAGE_TYPES.MARK_TEMP_MESSAGE_DELETED, payload: { tempId: msg._id } });
         dispatch({ type: MESSAGE_TYPES.DELETE_TEMP_MESSAGE, payload: { tempId: msg._id } });
@@ -169,7 +170,13 @@ export const deleteMessage = ({ msg, auth, data, socket }) => async (dispatch) =
 
         return;
     }
-    console.log("[>>>CO _ID NE<<<]", msg._id);
+    // console.log("[>>>CO _ID NE<<<]", msg._id);
+    if (msg.media && msg.media.length > 0) {
+        msg.media.forEach((img) => {
+            imageDestroy(img, auth.token)
+        })
+    }
+
     const newData = deleteData(data, msg._id)
     dispatch({
         type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {
