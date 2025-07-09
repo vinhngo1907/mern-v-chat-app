@@ -1,3 +1,5 @@
+import { postDataAPI } from "./fetchData";
+
 export const checkImage = (file) => {
     // let err = "";
     if (!file) {
@@ -35,4 +37,9 @@ export const imageUpload = async (images) => {
         imgArr.push({ public_id: data.public_id, url: data.secure_url });
     }
     return imgArr;
+}
+
+export const imageDestroy = async (img, token) => {
+    const res = await postDataAPI('upload/destroy', { public_id: img.public_id }, token);
+    return res.data;
 }
