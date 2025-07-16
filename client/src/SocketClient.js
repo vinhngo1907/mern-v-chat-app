@@ -40,13 +40,14 @@ const SocketClient = () => {
                 type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {
 
                     newData: data.listMessages,
-                    _id: data.msg.conversation 
+                    _id: data.msg.conversation
                 }
 
             });
         })
         return () => socket.off('deleteMessageToClient');
     }, [socket, dispatch]);
+
 
     // Check user online
     useEffect(() => {
@@ -132,6 +133,18 @@ const SocketClient = () => {
         return () => socket.off("deleteMessageToClient");
     }, [socket, dispatch]);
 
+    useEffect(() => {
+        socket.on("editMessageToClient", (msg) => {
+            dispatch({
+                type: MESSAGE_TYPES.EDIT_MESSAGE,
+                payload: {
+                    newData: msg.listMessages,
+                    _id: msg.sender
+                }
+            });
+        })
+        return () => socket.off("editMessageToClient");
+    }, [socket, dispatch])
     return (
         <>
             <audio controls ref={audioRef} style={{ display: 'none' }}>

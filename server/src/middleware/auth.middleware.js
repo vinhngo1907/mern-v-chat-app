@@ -4,7 +4,6 @@ const userModel = require("../models/user.model");
 const verifyToken = async (req, res, next) => {
 	const authHeader = req.header('Authorization');
 	const token = authHeader && authHeader.split(' ')[1];
-
 	if (!token)
 		return res
 			.status(400)
@@ -20,7 +19,7 @@ const verifyToken = async (req, res, next) => {
 
 		next()
 	} catch (error) {
-		console.log(error);
+		console.log("ERROR >>>",error);
 		req.error = error;
 		return res.status(500).json({ success: false, msg: error.message });
 	}

@@ -133,13 +133,19 @@ export const loadMoreMessages = ({ auth, id, page = 1 }) => async (dispatch) => 
 }
 
 export const editMessage = ({ id, msg, auth, data, socket }) => async (dispatch) => {
-    const newData = editData(data, msg, id);
-    dispatch({ type: MESSAGE_TYPES.EDIT_MESSAGE, payload: { newData, _id: msg.recipient } });
+    const newData = editData(data, msg, msg._id);
+    dispatch({
+        type: MESSAGE_TYPES.EDIT_MESSAGE, payload: {
+            _id: msg.recipient,
+            newData
+        }
+    });
+    socket.emit('editMessage', { listMessages: newData, msg });
     try {
-        await putDataAPI(`message/${msg._id}`, auth.token)
+        await putDataAPI(`message/${msg._id}`, msg, auth.token);
     } catch (err) {
         console.log(err);
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg || err } });
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err?.response?.data?.msg || "Something wrong when edit mess!!!" } });
     }
 }
 

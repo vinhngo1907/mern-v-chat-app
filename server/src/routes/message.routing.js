@@ -5,8 +5,10 @@ const messageCtrl = require('../controllers/message.controller');
 const redisClient = require('../configs/redis.config');
 
 // --- Protected Routes ---
-router.get('/:id', verifyToken, messageCtrl.getMessages);
 router.post('/', verifyToken, messageCtrl.createMessage);
+router.get('/:id', verifyToken, messageCtrl.getMessages);
+router.put('/:id', verifyToken, messageCtrl.editMessage);
+
 router.delete('/:id', verifyToken, messageCtrl.deleteMessage);
 
 // --- Mark temp deleted (public?) ---

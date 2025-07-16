@@ -12,6 +12,7 @@ export const GLOBALTYPES = {
 }
 
 export const editData = (data, post, id) =>{
+    console.log({data, post, id})
     const newData = data.map(item=>item._id === id ? post : item);
     return newData;
 }
