@@ -18,7 +18,7 @@ const SocketClient = () => {
     useEffect(() => {
         socket.on('addMessageToClient', msg => {
             // const currentConversationId = window.location.pathname.split('/').pop();
-            console.log({ msg })
+            // console.log({ msg })
             dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: msg })
 
             dispatch({

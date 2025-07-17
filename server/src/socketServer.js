@@ -158,7 +158,7 @@ const SocketServer = (socket) => {
 
     socket.on('endCall', data => {
         const client = users.find(user => user.id === data.sender)
-        console.log({ client })
+        // console.log({ client })
         if (client) {
             socket.to(`${client.socketId}`).emit('endCallToClient', data)
             users = EditData(users, client.id, null)
