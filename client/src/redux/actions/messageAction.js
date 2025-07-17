@@ -1,6 +1,6 @@
 import { deleteData, editData, GLOBALTYPES } from "./globalTypes";
 import { deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from "../../utils/fetchData";
-// import { createNotify } from "./notifyAction";
+import { createNotify } from "./notifyAction";
 import { v4 as uuidv4 } from 'uuid';
 import { imageDestroy } from "../../utils/imageUpload";
 
@@ -68,7 +68,7 @@ export const getConversations = ({ page, auth }) => async (dispatch) => {
 
 export const addMessage = ({ msg, auth, socket }) => async (dispatch) => {
     const tempId = `temp-${uuidv4()}`; // temp ID
-    console.log({ tempId })
+    console.log({ tempId, msg })
     const tempMsg = {
         ...msg,
         _id: tempId,
@@ -97,7 +97,20 @@ export const addMessage = ({ msg, auth, socket }) => async (dispatch) => {
                 savedMsg
             }
         });
-        console.log({ savedMsg, tempId })
+        // console.log({ savedMsg, tempId, msg });
+        if (msg.conversationId && savedMsg.conversationId !== msg.conversationId) {
+            const notify = {
+                id: savedMsg._id,
+                text: savedMsg.text,
+                recipients: [savedMsg.sender],
+                url: `/message/${msg.conversationId}`,
+                content: savedMsg.text ? 'mentioned you in a message.' : 'has media or/and contact.',
+                image: auth.user.avatar,
+                conversationId: savedMsg.sender
+            };
+
+            dispatch(createNotify({ msg: notify, auth, socket }));
+        }
     } catch (err) {
         dispatch({
             type: GLOBALTYPES.ALERT,

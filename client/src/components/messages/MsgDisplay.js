@@ -9,11 +9,11 @@ import Times from "./Times";
 const MsgDisplay = ({ user, msg, theme, data }) => {
     const { auth, socket } = useSelector(state => state);
     const dispatch = useDispatch();
-    
+
     const [isEditing, setIsEditing] = useState(false);
-    
+
     const [editText, setEditText] = useState(msg.text);
-    
+
     const handleDeleteMessage = () => {
         if (window.confirm("Do you want to continue delete message?")) {
             dispatch(deleteMessage({ msg, auth, data, socket }))
@@ -31,7 +31,7 @@ const MsgDisplay = ({ user, msg, theme, data }) => {
     const handleSaveEdit = () => {
         if (editText.trim() && editText !== msg.text) {
             dispatch(editMessage({
-                id, 
+                id,
                 msg: {
                     ...msg,
                     text: editText
@@ -48,12 +48,29 @@ const MsgDisplay = ({ user, msg, theme, data }) => {
             </div>
             <div className="chat_content">
                 {
+                    user._id === auth.user._id && (
+                        <div className="chat_action">
+                            <i
+                                className="fas fa-trash text-danger"
+                                onClick={handleDeleteMessage}
+                            />
+                            {msg.text && !msg.media.length && !msg.call && (
+                                <i
+                                    className="fas fa-edit text-primary"
+                                    onClick={handleEditMessage}
+                                />
+                            )}
+                        </div>
+                    )
+                }
+
+                {/* {
                     user._id === auth.user._id
                     && <div className="chat_action">
                         <i className="fas fa-trash text-danger" onClick={handleDeleteMessage} />
                         <i className="fas fa-edit text-primary" onClick={handleEditMessage} />
                     </div>
-                }
+                } */}
                 {/* <div className="chat_details">
                     {
                         msg.text && <p className="chat_text" style={{ filter: theme ? "invert(1)" : "invert(0)" }}>{msg.text}</p>
