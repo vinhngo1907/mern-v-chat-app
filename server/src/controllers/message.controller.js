@@ -87,8 +87,9 @@ const messageController = {
     },
     editMessage: async (req, res) => {
         try {
+            const user = req.user;
             const { sender, recipient, media, text, call } = req.body;
-            if (sender !== req.user._id) {
+            if (req.body.sender !== user._id.toString()) {
                 req.error = { message: "You don't have joined this conversation" }
                 return res.status(400).json({ msg: "You don't have joined this conversation" });
             }

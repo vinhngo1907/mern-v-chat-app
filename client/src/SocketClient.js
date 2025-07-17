@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MESSAGE_TYPES } from './redux/actions/messageAction';
 import audiobell from './audio/got-it-done-613.mp3'
@@ -17,6 +17,8 @@ const SocketClient = () => {
 
     useEffect(() => {
         socket.on('addMessageToClient', msg => {
+            // const currentConversationId = window.location.pathname.split('/').pop();
+            // console.log({ msg })
             dispatch({ type: MESSAGE_TYPES.ADD_MESSAGE, payload: msg })
 
             dispatch({
@@ -26,11 +28,29 @@ const SocketClient = () => {
                     text: msg.text,
                     media: msg.media
                 }
-            })
+            });
+
+            // if (currentConversationId && msg.conversationId !== currentConversationId) {
+            //     dispatch(createNotify({
+            //         msg: {
+            //             id: msg._id,
+            //             text: msg.text,
+            //             recipients: [auth.user._id],
+            //             url: `/message/${msg.conversationId}`,
+            //             content: '',
+            //             image: msg.media.length > 0 ? msg.media[0].url : '',
+            //             user: msg.user,
+            //             createdAt: msg.createdAt
+            //         },
+            //         auth,
+            //         socket
+            //     }));
+            // }
+
         })
 
         return () => socket.off('addMessageToClient');
-    }, [socket, dispatch]);
+    }, [socket, dispatch, auth]);
 
     useEffect(() => {
         socket.on('deleteMessageToClient', data => {
@@ -40,13 +60,14 @@ const SocketClient = () => {
                 type: MESSAGE_TYPES.DELETE_MESSAGE, payload: {
 
                     newData: data.listMessages,
-                    _id: data.msg.conversation 
+                    _id: data.msg.conversation
                 }
 
             });
         })
         return () => socket.off('deleteMessageToClient');
     }, [socket, dispatch]);
+
 
     // Check user online
     useEffect(() => {
@@ -103,9 +124,23 @@ const SocketClient = () => {
     // Notification
     useEffect(() => {
         socket.on('createNotifyToClient', (msg) => {
-            console.log({ msg })
+            // console.log('Notify Received:', msg);
+            const currentConversationId = window.location.pathname.split('/').pop();
+            // console.log({
+            //     currentConversationId,
+            //     conversationId: msg.url.endsWith(currentConversationId)
+            // })
+            if (msg.url.includes("/message/") && msg.url.endsWith(currentConversationId)) {
+                return;
+            }
+            // if (currentConversationId && msg.conversationId !== currentConversationId) {
+            //     dispatch({ type: NOTIFY_TYPES.CREATE_NOTIFY, payload: msg })
+            //     if (notify.sound) audioRef.current.play();
+            // }
+
             dispatch({ type: NOTIFY_TYPES.CREATE_NOTIFY, payload: msg })
             if (notify.sound) audioRef.current.play();
+
         });
         return () => socket.off('createNotifyToClient');
     }, [socket, dispatch, notify.sound]);
@@ -132,6 +167,18 @@ const SocketClient = () => {
         return () => socket.off("deleteMessageToClient");
     }, [socket, dispatch]);
 
+    useEffect(() => {
+        socket.on("editMessageToClient", (data) => {
+            dispatch({
+                type: MESSAGE_TYPES.EDIT_MESSAGE,
+                payload: {
+                    newData: data.listMessages,
+                    _id: data.msg.sender
+                }
+            });
+        })
+        return () => socket.off("editMessageToClient");
+    }, [socket, dispatch])
     return (
         <>
             <audio controls ref={audioRef} style={{ display: 'none' }}>

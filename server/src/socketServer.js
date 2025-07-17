@@ -65,27 +65,27 @@ const SocketServer = (socket) => {
 
 
     // Comments
-    socket.on('createComment', newPost => {
-        const ids = [...newPost.user.followers, newPost.user._id]
-        const clients = users.filter(user => ids.includes(user.id))
+    // socket.on('createComment', newPost => {
+    //     const ids = [...newPost.user.followers, newPost.user._id]
+    //     const clients = users.filter(user => ids.includes(user.id))
 
-        if (clients.length > 0) {
-            clients.forEach(client => {
-                socket.to(`${client.socketId}`).emit('createCommentToClient', newPost)
-            })
-        }
-    })
+    //     if (clients.length > 0) {
+    //         clients.forEach(client => {
+    //             socket.to(`${client.socketId}`).emit('createCommentToClient', newPost)
+    //         })
+    //     }
+    // })
 
-    socket.on('deleteComment', newPost => {
-        const ids = [...newPost.user.followers, newPost.user._id]
-        const clients = users.filter(user => ids.includes(user.id))
+    // socket.on('deleteComment', newPost => {
+    //     const ids = [...newPost.user.followers, newPost.user._id]
+    //     const clients = users.filter(user => ids.includes(user.id))
 
-        if (clients.length > 0) {
-            clients.forEach(client => {
-                socket.to(`${client.socketId}`).emit('deleteCommentToClient', newPost)
-            })
-        }
-    })
+    //     if (clients.length > 0) {
+    //         clients.forEach(client => {
+    //             socket.to(`${client.socketId}`).emit('deleteCommentToClient', newPost)
+    //         })
+    //     }
+    // })
 
 
     // Follow
@@ -102,6 +102,7 @@ const SocketServer = (socket) => {
 
     // Notification
     socket.on('createNotify', msg => {
+        console.log({msg});
         const client = users.find(user => msg.recipients.includes(user.id))
         client && socket.to(`${client.socketId}`).emit('createNotifyToClient', msg)
     });
@@ -157,7 +158,7 @@ const SocketServer = (socket) => {
 
     socket.on('endCall', data => {
         const client = users.find(user => user.id === data.sender)
-        console.log({ client })
+        // console.log({ client })
         if (client) {
             socket.to(`${client.socketId}`).emit('endCallToClient', data)
             users = EditData(users, client.id, null)
@@ -176,6 +177,14 @@ const SocketServer = (socket) => {
         const user = users.find(user => user.id === data.msg.recipient);
         user && socket.to(`${user.socketId}`).emit('deleteMessageToClient', data);
     });
+
+    // Edit message
+    socket.on("editMessage", (data) => {
+        const user = users.find(u => u.id === data.msg.recipient);
+        if (user) {
+            socket.to(`${user.socketId}`).emit('editMessageToClient', data);
+        }
+    })
 }
 
 module.exports = SocketServer

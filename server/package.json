@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node index.js",
         "server": "nodemon index.js",
-        "client": "cd client && npm run start",
+        "client": "cd ../client && npm run start",
         "server-install": "npm install",
         "client-install": "cd client && npm install",
         "install-all": "concurrently \"npm run server-install\" \"npm run client-install\" ",

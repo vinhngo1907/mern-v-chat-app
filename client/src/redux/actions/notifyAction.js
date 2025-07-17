@@ -18,7 +18,8 @@ export const createNotify = ({ msg, auth, socket }) => async (dispatch) => {
             user: {
                 username: auth.user.username,
                 avatar: auth.user.avatar
-            }
+            },
+            // conversationId: msg?.conversationId
         })
     } catch (err) {
         console.log(err);

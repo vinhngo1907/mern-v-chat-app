@@ -99,7 +99,8 @@ const RightSide = () => {
             recipient: id,
             text,
             media: newMedia,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            conversationId: auth.user._id
         }
 
         setLoadMedia(false)

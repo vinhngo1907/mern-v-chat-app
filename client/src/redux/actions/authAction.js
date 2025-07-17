@@ -33,7 +33,9 @@ export const refreshToken = () => async (dispatch) => {
                 }
             })
 
-            dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
+            dispatch({ type: GLOBALTYPES.ALERT, payload: { 
+                // success: res.data.msg
+             } });
 
         } catch (err) {
             console.log(err);

@@ -73,6 +73,22 @@ const messageReducer = (state = initialState, action) => {
                 ...state,
                 data: newData
             }
+        case MESSAGE_TYPES.EDIT_MESSAGE:
+            console.log("action payload", action.payload)
+            const new_data = state.data.map(item =>
+                item._id === action.payload._id
+                    ? { ...item, messages: action.payload.newData }
+                    : item);
+
+            // console.log({
+            //     ...state,
+            //     data: newData,
+            //     newData
+            // })
+            return {
+                ...state,
+                data: new_data
+            }
         case MESSAGE_TYPES.DELETE_CV:
             const newMesssages = deleteData(state.data, action.payload._id);
             return {
